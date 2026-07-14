@@ -9,7 +9,7 @@ export default function ProductList() {
       const [loading, setLoading] = useState(true);
     
       useEffect(() => {
-        axios.get('http://localhost:8081/api/products')
+        axios.get('http://localhost:8082/api/products')
           .then(response => {
             setMessage(response.data); 
             setLoading(false);
