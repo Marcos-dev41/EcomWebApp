@@ -1,7 +1,7 @@
 
 import './App.css'
 import ProductComp from './components/ProductComp';
-import ProductList from './pages/ProductList';
+import ProductList from './pages/ProductPage';
 
 function App() {
   
