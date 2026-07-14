@@ -1,13 +1,14 @@
-import { useState } from 'react'
+
 import './App.css'
+import ProductComp from './components/ProductComp';
+import ProductList from './pages/ProductList';
 
 function App() {
+  
 
   return (
     <>
-      <div className='bg-gray-200 text-2xl border-2'>
-        My Ecom website
-      </div>
+    <ProductList/>
     </>
   )
 }
