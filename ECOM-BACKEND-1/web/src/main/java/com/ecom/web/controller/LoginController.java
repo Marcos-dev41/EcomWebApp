@@ -4,9 +4,12 @@ package com.ecom.web.controller;
 import com.ecom.web.model.User;
 import com.ecom.web.service.LoginService;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +31,16 @@ public class LoginController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
+    }
+
+    @PostMapping("/register")
+    public void register(@RequestBody User user){
+        service.addAccount(user);
+    }
+
+    @GetMapping("/register")
+    public List<User> getUser(){
+       return service.accounts();
     }
 
 }
