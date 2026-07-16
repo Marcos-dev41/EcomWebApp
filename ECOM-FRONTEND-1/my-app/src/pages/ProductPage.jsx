@@ -3,13 +3,16 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Product from '../components/ProductComp';
 import NavBar from '../components/NavBar';
+import api from '../axioxInstance';
+
+
 
 export default function ProductList() {
     const [message, setMessage] = useState('');
       const [loading, setLoading] = useState(true);
     
       useEffect(() => {
-        axios.get('http://localhost:8082/api/products')
+        api.get('/products')
           .then(response => {
             setMessage(response.data); 
             setLoading(false);

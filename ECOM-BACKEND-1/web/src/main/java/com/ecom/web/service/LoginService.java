@@ -1,6 +1,5 @@
 package com.ecom.web.service;
 import  com.ecom.web.repository.LoginRepo;
-import com.ecom.web.security.JwtUtil;
 import com.ecom.web.model.*;
 
 import java.util.List;
