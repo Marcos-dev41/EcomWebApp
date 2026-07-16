@@ -26,5 +26,5 @@ public class User {
     @Column(unique = true)
     private String email;
     private String userPassword; 
-    // private String role = "user";
+    private String role = "USER";
 }

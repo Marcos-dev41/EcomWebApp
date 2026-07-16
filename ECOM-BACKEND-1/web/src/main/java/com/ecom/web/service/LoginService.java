@@ -1,5 +1,6 @@
 package com.ecom.web.service;
 import  com.ecom.web.repository.LoginRepo;
+import com.ecom.web.security.JwtUtil;
 import com.ecom.web.model.*;
 
 import java.util.List;
@@ -20,9 +21,13 @@ public class LoginService {
     @Autowired
     PasswordEncoder encoder;
 
+    // @Autowired
+    // JwtUtil jwtUtil;
+
     public void addAccount(User user){
         String hashed  = encoder.encode(user.getUserPassword());
         user.setUserPassword(hashed);
+        user.setRole("USER");
         repo.save(user);
     }
     public boolean checkCredentials(User user){
