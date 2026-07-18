@@ -9,11 +9,4 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss(),
   ],
-  //  envDir: `../`,
-
-  configResolved(config) {
-    console.log('------------------------------------');
-    console.log('Vite Project Root:', config.root);
-    console.log('Searching for .env in:', path.resolve(config.root, '../'));
-    console.log('------------------------------------')}
 })
