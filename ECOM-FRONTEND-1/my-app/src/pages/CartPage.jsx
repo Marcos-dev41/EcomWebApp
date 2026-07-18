@@ -1,9 +1,11 @@
 import React from 'react'
 import CartComp from '../components/CartComp'
+import GlobalNav from '../components/GlobalNav'
 
 export default function CartPage() {
   return (
     <>
+    <GlobalNav/>
      <div className=' w-fit p-5 m-2 h-100 rounded-2xl'>
         <div className='w-full border-2 rounded-2xl flex flex-row items-center bg-orange-400 p-2 text-white text-2xl font-bold'>
             <h2 className='text-center text-2xl font-bold'>Cart</h2>

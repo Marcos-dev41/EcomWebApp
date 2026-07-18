@@ -7,10 +7,7 @@ import LoginPage from './pages/LoginPage'
 import CartPage from "./pages/CartPage";
 
 function App() {
-  console.log("--- MY API URL IS ---:", import.meta.env.VITE_API_URL);
-  console.log("hello");
-  
-
+ 
   return (
     <BrowserRouter>
       <Routes>

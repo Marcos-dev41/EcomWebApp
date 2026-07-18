@@ -2,15 +2,19 @@ import React from 'react'
 import user from '../../src/assets/account.png'
 import cart from '../../src/assets/grocery-store.png'
 import bell from '../../src/assets/bell.png'
+import store from '../../src/assets/store.png'
 import { Link } from 'react-router-dom'
 
 export default function 
 () {
+    
+
   return (
     <div className='w-full flex flex-row justify-around bg-orange-400 h-13 items-center font-semibold'>
         <h1 className='text-2xl'>MoniMart</h1>
-        <input className='bg-orange-100 rounded-2xl w-80 p-2 pl-5' type="search" placeholder='search...'/>
+        
         <div className='flex flex-row justify-between pl-5 pr-5 gap-4'>
+            <Link to={"/products"}><img src={store} alt="" width=" 35px" height="30px" className='opacity-85' /></Link>
             <Link to={"/notifications"} ><img src={bell} alt="" width=" 35px" height="30px" className='opacity-85' /></Link>
             <Link to={"/cart"}><img src={cart} alt="" width=" 35px" height="30px" className='opacity-85'/></Link>
         </div>
