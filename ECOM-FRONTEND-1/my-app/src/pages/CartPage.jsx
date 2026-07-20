@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { createContext, useState } from 'react'
 import CartComp from '../components/CartComp'
 import GlobalNav from '../components/GlobalNav'
 
+
+const cartCreateContext = createContext();
 export default function CartPage() {
+const[cart,setCart] = useState;
+cart = useState("");
+
   return (
     <>
     <GlobalNav/>
