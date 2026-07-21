@@ -5,10 +5,12 @@ import ProductList from './pages/ProductPage';
 import RegistrationPage from './pages/RegistrationPage'
 import LoginPage from './pages/LoginPage'
 import CartPage from "./pages/CartPage";
+import CartProvider from "./pages/CartContext";
 
 function App() {
  
   return (
+  <CartProvider>     
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ProductList/>}></Route>
@@ -18,6 +20,8 @@ function App() {
         <Route path="/cart" element={<CartPage/>}></Route>
       </Routes>
     </BrowserRouter>
+   </CartProvider>
+
   )
 }
 

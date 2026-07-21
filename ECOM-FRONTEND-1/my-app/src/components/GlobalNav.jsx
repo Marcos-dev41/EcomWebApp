@@ -1,7 +1,7 @@
 import React from 'react'
 import user from '../../src/assets/account.png'
-import cart from '../../src/assets/grocery-store.png'
-import bell from '../../src/assets/bell.png'
+import cart from '../../src/assets/add-cart.png'
+import bell from '../../src/assets/notification.png'
 import store from '../../src/assets/store.png'
 import { Link } from 'react-router-dom'
 
@@ -14,8 +14,8 @@ export default function
         <h1 className='text-2xl'>MoniMart</h1>
         
         <div className='flex flex-row justify-between pl-5 pr-5 gap-4'>
-            <Link to={"/products"}><img src={store} alt="" width=" 35px" height="30px" className='opacity-85' /></Link>
-            <Link to={"/notifications"} ><img src={bell} alt="" width=" 35px" height="30px" className='opacity-85' /></Link>
+            <Link to={"/products"}><img src={store} alt="" width=" 33px" height="30px" className='opacity-85' /></Link>
+            <Link to={"/notifications"} ><img src={bell} alt="" width=" 33px" height="30px" className='opacity-85' /></Link>
             <Link to={"/cart"}><img src={cart} alt="" width=" 35px" height="30px" className='opacity-85'/></Link>
         </div>
         <div className='flex flex-row justify-between w-32 items-center'>

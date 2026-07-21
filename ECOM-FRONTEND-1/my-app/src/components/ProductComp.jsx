@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 
 import pic from '../../src/assets/m1.png'
+import { useCart } from '../pages/CartContext'
 
 export default function ProductComp({product}) {
-    
-  const handeClick = (()=>{
+    const {addToCart} = useCart()
+    const [showAlert,setShowAlert]  = useState(false)
+
+    function handleAddtoCart(){
+      addToCart(product.prodId)
+      setShowAlert(true);
+    setTimeout(() => setShowAlert(false), 1500);
+    }
   
-    const cartItem = localStorage.setItem(`${product.prodId}`,`${product.prodName}`);
-  })
   return (
-    <div className="bg-white rounded-2xl p-2 flex flex-col justify-center border-2-gray w-50 text-center">
+    <div className="bg-white rounded-2xl p-2 relative flex flex-col justify-center border-2-gray w-50 text-center">
         <img src={pic} alt="monitor pic" />
 
         <div className='p-2'>
@@ -21,9 +26,14 @@ export default function ProductComp({product}) {
             <h4 className = "text-green-500 "> {product.available ? "In stock" : "Out of stock"}</h4>
         </div>
 
-        <button className="bg-orange-200 mt-2 p-2 pl-5 pr-5 rounded-2xl " onClick={handeClick}>
+        <button className="bg-orange-200 mt-2 p-2 pl-5 pr-5 rounded-2xl " onClick={handleAddtoCart}>
            {product.available ? "Add to cart" : "Out of stock"}
         </button>
+        {showAlert && (
+        <div className="absolute top-0 left-0 bg-green-500 text-white text-sm px-2 py-1 rounded-2xl">
+          Added to cart!
+        </div>
+      )}
         
     </div>
   )}
