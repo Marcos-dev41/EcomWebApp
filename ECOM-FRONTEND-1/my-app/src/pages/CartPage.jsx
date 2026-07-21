@@ -19,6 +19,10 @@ const formatKSh = new Intl.NumberFormat('en-KE', {
 
 console.log(formatKSh.format(2500)); 
 
+// api.post("/payment/request/checkout"){
+
+// }
+
 
 useEffect(()=>
   {

@@ -26,8 +26,7 @@ public class Order {
     
 
 
- @OneToMany
+ @OneToMany(mappedBy = "orders")
    private List <OrderItem> orderItems;
-    
 
 }
