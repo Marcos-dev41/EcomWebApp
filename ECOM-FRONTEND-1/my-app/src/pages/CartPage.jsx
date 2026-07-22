@@ -3,6 +3,7 @@ import CartComp from '../components/CartComp'
 import GlobalNav from '../components/GlobalNav'
 import { useCart } from './CartContext'
 import api from '../axioxInstance';
+import { useNavigate } from 'react-router-dom';
 
 
 // const cartCreateContext = createContext();
@@ -10,6 +11,8 @@ export default function CartPage() {
 const {cart} = useCart();
 const [products,setProducts] = useState([]);
 const [loading,setLoading] = useState(true);
+
+const navigate = useNavigate();
 
 const formatKSh = new Intl.NumberFormat('en-KE', {
   style: 'currency',
@@ -54,8 +57,8 @@ const total = cartWithDetails.reduce((accumulator, item) => {
 
     <GlobalNav/>
      <div className=' w-fit p-5 m-5 mt-2 h-100 rounded-2xl'>
-        <div className='w-full border-2 rounded-2xl flex flex-row items-center bg-orange-400 p-2 text-white text-2xl font-bold'>
-            <h2 className='text-center text-2xl font-bold'>Cart</h2>
+        <div className='w-full  rounded-2xl flex flex-row text-center bg-orange-400 p-2 text-white text-2xl font-bold'>
+            <h2>Cart</h2>
         </div>
         {cartWithDetails.map((item)=>{
           return(
@@ -64,7 +67,9 @@ const total = cartWithDetails.reduce((accumulator, item) => {
 
          <div className='flex flex-row justify-around p-2 m-5 w-full text-center h-fit items-center border-2 rounded-2xl 2xl:max-w-[550px]'>
            <h4 className='font-bold'>{formatKSh.format(total)}</h4> 
-           <button className='bg-orange-400 text-white font-semibold rounded-2xl p-2'>Confirm and checkout</button> 
+           <button className='bg-orange-400 text-white font-semibold rounded-2xl p-2 ' onClick={(e)=>{
+            navigate("/checkout")
+           }}>Confirm and checkout</button> 
         </div>
         
      </div>
