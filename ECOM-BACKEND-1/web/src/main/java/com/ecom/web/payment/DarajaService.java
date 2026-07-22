@@ -1,15 +1,22 @@
 package com.ecom.web.payment;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.ecom.web.model.Order;
+
 import org.springframework.http.HttpHeaders;
 
 
@@ -51,4 +58,46 @@ public class DarajaService {
 return (String) response.getBody().get("access_token");
 
 }  
+
+public String generateTimestamp(){
+ DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+ return LocalDateTime.now().format(formatter);
+}
+
+public String generatePassword(String timestamp){
+    String rawPassword = shortCode + passKey + timestamp;
+    return Base64.getEncoder().encodeToString(rawPassword.getBytes());
+}
+
+public Map<String,Object> intiateStkPush(Order order,String phoneNumber){
+    String accessToken = getAccessToken();
+    String timestamp = generateTimestamp();
+    String password = generatePassword(timestamp);
+
+    Map<String,Object> requestBody = new HashMap<>();
+    requestBody.put("BusinessShortCode", shortCode);
+    requestBody.put("Password",password);
+    requestBody.put("Timestamp",timestamp);
+    requestBody.put("TransactionType","CustomerPayBillOnline");
+    requestBody.put("Amount", order.getOrderTotal().intValue());
+    requestBody.put("PartyA",phoneNumber);
+    requestBody.put("PartyB",shortCode);
+    requestBody.put("PhoneNumber",phoneNumber);
+    requestBody.put("CallBackURL",callbackUrl);
+    requestBody.put("AccountReference","Order"+ order.getOrderId());
+    requestBody.put("TransactionDesc","Payment for order "+ order.getOrderId());
+
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization","Bearer "+accessToken);
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
+    HttpEntity<Map<String,Object>> request = new HttpEntity<>(requestBody,headers);
+
+    RestTemplate restTemplate = new RestTemplate();
+    ResponseEntity<Map<String,Object>> response = restTemplate.exchange("https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest", HttpMethod.POST,request,new ParameterizedTypeReference <Map<String,Object>>() {});
+
+    return response.getBody();
+
+}
 }

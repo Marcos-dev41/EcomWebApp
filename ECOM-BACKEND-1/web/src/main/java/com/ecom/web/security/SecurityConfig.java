@@ -39,7 +39,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/payment/**").permitAll()
-            .requestMatchers("/api/payments/test-token").permitAll()
+            .requestMatchers("/api/payments/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/products/**").authenticated()
             .anyRequest().authenticated()
