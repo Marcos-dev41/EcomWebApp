@@ -15,7 +15,7 @@ export default function
         setStatus("Sending payment request...");
 
         try{
-            await api.post(`/payments/stkpush/${orderId}?phoneNumber={phoneNumber}`);
+            await api.post(`/payments/stkpush/${orderId}?phoneNumber=${phoneNumber}`);
             setStatus("check your phone to complete payment");
 
         }catch(error){
