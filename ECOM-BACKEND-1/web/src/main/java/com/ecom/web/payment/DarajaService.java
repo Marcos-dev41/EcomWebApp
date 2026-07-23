@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.ecom.web.model.Order;
+import com.ecom.web.repository.OrderRepo;
 
 import org.springframework.http.HttpHeaders;
 
@@ -22,6 +25,10 @@ import org.springframework.http.HttpHeaders;
 
 @Service
 public class DarajaService {
+
+    @Autowired
+    private OrderRepo orderRepo;
+
     @Value("${consumer.key}")
     private String consumerKey;
 
@@ -96,7 +103,12 @@ public Map<String,Object> intiateStkPush(Order order,String phoneNumber){
     RestTemplate restTemplate = new RestTemplate();
     ResponseEntity<Map<String,Object>> response = restTemplate.exchange("https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest", HttpMethod.POST,request,new ParameterizedTypeReference <Map<String,Object>>() {});
 
-    return response.getBody();
+    Map<String,Object> responseBody = response.getBody();
 
+    String checkoutRequestId =(String) responseBody.get("CheckoutRequestID");
+    order.setCheckoutRequestId(checkoutRequestId);
+    orderRepo.save(order);
+
+     return responseBody;
 }
 }
