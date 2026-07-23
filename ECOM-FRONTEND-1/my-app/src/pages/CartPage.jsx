@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 // const cartCreateContext = createContext();
 export default function CartPage() {
-const {cart} = useCart();
+const {cart,clearCart} = useCart();
 const [products,setProducts] = useState([]);
 const [loading,setLoading] = useState(true);
 
@@ -20,12 +20,16 @@ const formatKSh = new Intl.NumberFormat('en-KE', {
   maximumFractionDigits: 0,
 });
 
-console.log(formatKSh.format(2500)); 
-
-// api.post("/payment/request/checkout"){
-
-// }
-
+async function handleCheckout(){
+  try{
+    const response = await api.post("/payment/checkout",cart);
+    console.log("order response:", response.data);
+    const order = response.data;
+    clearCart(); 
+    navigate(`/checkout/${order.orderId}`);
+}catch(error){
+  console.error("Checkout Failed",error);
+}}
 
 useEffect(()=>
   {
@@ -67,9 +71,7 @@ const total = cartWithDetails.reduce((accumulator, item) => {
 
          <div className='flex flex-row justify-around p-2 m-5 w-full text-center h-fit items-center border-2 rounded-2xl 2xl:max-w-[550px]'>
            <h4 className='font-bold'>{formatKSh.format(total)}</h4> 
-           <button className='bg-orange-400 text-white font-semibold rounded-2xl p-2 ' onClick={(e)=>{
-            navigate("/checkout")
-           }}>Confirm and checkout</button> 
+           <button className='bg-orange-400 text-white font-semibold rounded-2xl p-2 ' onClick={handleCheckout}>Confirm and checkout</button> 
         </div>
         
      </div>

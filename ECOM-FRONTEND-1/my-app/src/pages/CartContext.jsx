@@ -33,8 +33,12 @@ function removeFromCart(prodId){
   setCart((prevCart) => prevCart.filter((item) => item.prodId !== prodId));
 }
 
+function clearCart() {
+  setCart([]);
+}
+
   return(
-    <CartContext.Provider value={{cart, addToCart, removeFromCart}}>
+    <CartContext.Provider value={{cart, addToCart,clearCart, removeFromCart}}>
       {children}
     </CartContext.Provider>
   );

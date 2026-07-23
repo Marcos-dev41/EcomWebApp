@@ -19,9 +19,8 @@ function App() {
         <Route path="/register" element={<RegistrationPage/>}></Route>
         <Route path="/login" element={<LoginPage/>}></Route>
         <Route path="/cart" element={<CartPage/>}></Route>
-        <Route path="/checkout" element={<Checkout/>}></Route>
-
-      </Routes>
+        <Route path="/checkout/:orderId" element={<Checkout />} />  
+     </Routes>
     </BrowserRouter>
    </CartProvider>
 
