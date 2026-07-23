@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecom.web.model.CartItemRequest;
+import com.ecom.web.model.Order;
 import com.ecom.web.service.CreateOrderFromCart;
 
 @RestController
@@ -18,7 +19,7 @@ public class CartController {
     private CreateOrderFromCart service;
 
     @PostMapping("/checkout")
-    public void getCheckOutDetails(@RequestBody List<CartItemRequest> cartItemRequests){
-        service.createOrderFromCart(cartItemRequests);
+    public Order getCheckOutDetails(@RequestBody List<CartItemRequest> cartItemRequests){
+         return service.createOrderFromCart(cartItemRequests);
     }
 }
