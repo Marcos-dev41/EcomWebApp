@@ -28,7 +28,7 @@ public class PaymentController {
     private OrderRepo orderRepo;
 
     @Autowired
-    private EmailService service;
+    private EmailService emailService;
 
     @GetMapping("/test-token")
     public String testToken() {
@@ -77,14 +77,14 @@ public Map<String, Object> handleCallback(@RequestBody Map<String, Object> callb
             //handle email submission
             order.setOrderStatus("PAID");
             orderRepo.save(order);
-
-            service.sendPaymentConfirmation(order);
+            emailService.sendPaymentConfirmation(order.getUser().getEmail(), order);
 
             
     }else{
         // mark order as failed and push notification
         order.setOrderStatus("FAILED");
         orderRepo.save(order);
+        emailService.sendPaymentFailure(order.getUser().getEmail(), order);
     }
 
     return Map.of("ResultCode", 0, "ResultDesc", "Accepted");

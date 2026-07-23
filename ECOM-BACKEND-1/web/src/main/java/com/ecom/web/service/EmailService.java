@@ -13,12 +13,21 @@ public class EmailService{
 private JavaMailSender mailSender;
 
 
-public void sendPaymentConfirmation(Order order){
+public void sendPaymentConfirmation(String toEmail ,Order order){
  
     SimpleMailMessage message = new SimpleMailMessage();
-    message.setTo("marktechsolutions149@gmail.com");
+    message.setTo(toEmail);
     message.setSubject("Payment Confrimation -Order #" + order.getOrderId());
-    message.setText("Your payment of ksh" + order.getOrderTotal() + "has been recieved succesfully. Thankyou!");
+    message.setText("Your payment of ksh " + order.getOrderTotal() + " has been recieved succesfully. Thankyou!");
+    mailSender.send(message);
+}
+
+public void sendPaymentFailure(String toEmail ,Order order){
+ 
+    SimpleMailMessage message = new SimpleMailMessage();
+    message.setTo(toEmail);
+    message.setSubject("Payment Failed -Order #" + order.getOrderId());
+    message.setText("Your payment of ksh " + order.getOrderTotal() + " has been FAILED. please try again");
     mailSender.send(message);
 }
 }

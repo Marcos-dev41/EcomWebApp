@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ecom.web.model.CartItemRequest;
 import com.ecom.web.model.Order;
 import com.ecom.web.model.Product;
+import com.ecom.web.model.User;
 import com.ecom.web.model.OrderItem;
+import com.ecom.web.repository.LoginRepo;
 import com.ecom.web.repository.OrderRepo;
 import com.ecom.web.repository.ProductRepo;
 
@@ -20,6 +23,9 @@ public class CreateOrderFromCart {
 
     @Autowired
     private OrderRepo orderRepo;
+
+    @Autowired
+    private LoginRepo loginRepo;
 
     @Autowired
     private ProductRepo productRepo;
@@ -43,11 +49,14 @@ public class CreateOrderFromCart {
             orderItems.add(orderItem);
             
         }
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user =  loginRepo.findByEmail(email).orElseThrow();
 
         Order order = new Order();
         order.setOrderStatus("PENDING");
         order.setOrderTotal(total);
         order.setOrderItems(orderItems);
+        order.setUser(user);
 
         for(OrderItem orderItem : orderItems){
             orderItem.setOrders(order);
