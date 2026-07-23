@@ -26,6 +26,7 @@ public class Order {
     private Integer orderId;
     private String orderStatus;
     private BigDecimal orderTotal;
+    private String checkoutRequestId;
     
 
 
