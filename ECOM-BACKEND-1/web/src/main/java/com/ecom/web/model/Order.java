@@ -3,6 +3,9 @@ package com.ecom.web.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,12 +34,13 @@ public class Order {
     private String checkoutRequestId;
     
 
-
+@JsonManagedReference
  @OneToMany(mappedBy = "orders" ,cascade = CascadeType.ALL)
    private List <OrderItem> orderItems;
 
 @ManyToOne()
 @JoinColumn(name = "user_id")
+@JsonIgnoreProperties({"order", "userPassword"})
  private User user;
 
 
