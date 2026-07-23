@@ -11,8 +11,7 @@ export default function NotificationsPage() {
       .then((response) => {
         setOrders(response.data);
         setLoading(false);
-        console.log("orders response:", response.data);
-      })
+          })
       .catch((error) => {
         console.error("fetch error", error);
         setLoading(false);
