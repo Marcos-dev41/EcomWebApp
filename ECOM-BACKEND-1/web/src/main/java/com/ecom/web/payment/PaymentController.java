@@ -1,5 +1,6 @@
 package com.ecom.web.payment;
 
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecom.web.model.Order;
 import com.ecom.web.repository.OrderRepo;
+import com.ecom.web.service.*;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -24,6 +26,9 @@ public class PaymentController {
 
     @Autowired
     private OrderRepo orderRepo;
+
+    @Autowired
+    private EmailService service;
 
     @GetMapping("/test-token")
     public String testToken() {
@@ -72,6 +77,8 @@ public Map<String, Object> handleCallback(@RequestBody Map<String, Object> callb
             //handle email submission
             order.setOrderStatus("PAID");
             orderRepo.save(order);
+
+            service.sendPaymentConfirmation(order);
 
             
     }else{
