@@ -40,6 +40,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/payments/callback").permitAll()
             .requestMatchers("/api/payment/checkout").authenticated()
+            .requestMatchers("/api/order/my-orders").authenticated()
             .requestMatchers("/api/payments/**").authenticated()
             .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/products/**").authenticated()
