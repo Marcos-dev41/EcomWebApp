@@ -9,6 +9,7 @@ import CartProvider from "./pages/CartContext";
 import Checkout from "./pages/Checkout";
 import NotificationsPage from "./pages/NotificationsPage";
 import PassResetPage from "./pages/PassResetPage";
+import NewPasswordPage from "./pages/NewPasswordPage";
 
 function App() {
  
@@ -22,6 +23,7 @@ function App() {
         <Route path="/login" element={<LoginPage/>}></Route>
         <Route path="/cart" element={<CartPage/>}></Route>
         <Route path="/passresetpage" element={<PassResetPage/>}></Route>
+        <Route path="/newpassword" element={<NewPasswordPage/>}></Route>
         <Route path="/checkout/:orderId" element={<Checkout />} />  
         <Route path="/notifications" element={<NotificationsPage/>}></Route>
      </Routes>

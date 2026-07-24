@@ -9,9 +9,7 @@ export default function PassResetPage() {
 
     const handleSubmit = ((e)=>{
         const response = api.post("/auth/account",{email: email});
-        if (response.data == true){
-            Navigate("/newpassword");
-        }
+            navigate("/newpassword");
     })
     
     
@@ -27,7 +25,7 @@ export default function PassResetPage() {
     <form className='flex flex-col mt-3 w-fit'>
         <input type="email" name="email" className='border-2 w-60 p-2 rounded-2xl font-semibold' placeholder='Enter your email' />
         <br />
-        <button className='border-2 p-2 rounded-2xl w-full bg-orange-400 text-white font-semibold'>Submit</button>
+        <button className='border-2 p-2 rounded-2xl w-full bg-orange-400 text-white font-semibold' onClick={handleSubmit}>Submit</button>
     </form>
     </div>
     </>
