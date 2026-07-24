@@ -8,6 +8,7 @@ import CartPage from "./pages/CartPage";
 import CartProvider from "./pages/CartContext";
 import Checkout from "./pages/Checkout";
 import NotificationsPage from "./pages/NotificationsPage";
+import PassResetPage from "./pages/PassResetPage";
 
 function App() {
  
@@ -20,6 +21,7 @@ function App() {
         <Route path="/register" element={<RegistrationPage/>}></Route>
         <Route path="/login" element={<LoginPage/>}></Route>
         <Route path="/cart" element={<CartPage/>}></Route>
+        <Route path="/passresetpage" element={<PassResetPage/>}></Route>
         <Route path="/checkout/:orderId" element={<Checkout />} />  
         <Route path="/notifications" element={<NotificationsPage/>}></Route>
      </Routes>

@@ -40,10 +40,10 @@ export default function
         
                 <input type="tel" placeholder='254*******' value={phoneNumber} 
                     onChange={(e)=>{setPhoneNumber(e.target.value)}}
-                    className='border-2 p-2 rounded' required maxLength={12}
+                    className='border-2 p-2 rounded' maxLength={12} required
                     />
                 <br />
-                <button className='bg-orange-400 rounded p-2 font-bold text-white' type='submit ' onClick={handlePayment}>Place Order</button>
+                <button type="submit" className='bg-orange-400 rounded p-2  font-bold text-white' onClick={handlePayment}>Place Order</button>
             </form>
             {status && <p>{status}</p>}
         </div>

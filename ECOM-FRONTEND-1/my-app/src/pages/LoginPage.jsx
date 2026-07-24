@@ -4,6 +4,7 @@ import{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import api from '../axioxInstance';
+import { Link } from 'react-router-dom';
  
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -58,6 +59,12 @@ export default function LoginPage() {
     
                 <button type='submit' className='border-0 p-2 m-2 pl-4 pr-4 bg-orange-500 rounded-2xl  text-white font-semibold'>submit</button>
             </form>
+             
+             <Link to={"/PassResetPage"}>
+             <p className='text-red-500'>
+                Reset password
+            </p>
+             </Link>
     
         </div>
         </div>
