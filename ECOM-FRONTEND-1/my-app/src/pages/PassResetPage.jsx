@@ -5,12 +5,29 @@ import { useNavigate } from 'react-router-dom';
 
 export default function PassResetPage() {
     const [email,setEmail] = useState("");
+    const [status,setStatus] =useState("")
     const navigate = useNavigate();
 
-    const handleSubmit = ((e)=>{
-        const response = api.post("/auth/account",{email: email});
-            navigate("/newpassword");
-    })
+    const handleSubmit = ((e) => {
+        e.preventDefault();
+        
+    api.post("/auth/account", { "email": email })
+        .then((response) => {
+            console.log(response.data);
+            if(response.data == true){
+                setStatus("Sending Email ...")
+                setTimeout(() => {
+    setStatus("Check your Email!");
+}, 30000); 
+            }else{
+                setStatus("Account does not exist")
+            }
+
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+});
     
     
 
@@ -23,10 +40,12 @@ export default function PassResetPage() {
         </div>
     
     <form className='flex flex-col mt-3 w-fit'>
-        <input type="email" name="email" className='border-2 w-60 p-2 rounded-2xl font-semibold' placeholder='Enter your email' />
+        <input type="email" name="email"  value={email}
+  onChange={(e) => setEmail(e.target.value)} className='border-2 w-60 p-2 rounded-2xl font-semibold' placeholder='Enter your email'/>
         <br />
         <button className='border-2 p-2 rounded-2xl w-full bg-orange-400 text-white font-semibold' onClick={handleSubmit}>Submit</button>
     </form>
+    <p className='text-red-400'>{status}</p>
     </div>
     </>
     
