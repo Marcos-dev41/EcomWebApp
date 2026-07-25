@@ -17,10 +17,12 @@ export default function PassResetPage() {
             if(response.data == true){
                 setStatus("Sending Email ...")
                 setTimeout(() => {
-    setStatus("Check your Email!");
+    setStatus("Check your Email!")
+    setEmail("");
 }, 30000); 
             }else{
                 setStatus("Account does not exist")
+                setEmail("")
             }
 
         })
