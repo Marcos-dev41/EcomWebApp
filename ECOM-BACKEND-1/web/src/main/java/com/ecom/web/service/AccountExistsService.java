@@ -1,14 +1,19 @@
 package com.ecom.web.service;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.ecom.web.model.User;
+
 import com.ecom.web.repository.*;
 
+@Service
 public class AccountExistsService {
-    
-// public boolean accountExistsChecker(User user){
-    // LoginRepo.findByEmail(user.getEmail());
-    // return true;
-// }
+    @Autowired
+    private LoginRepo loginRepo;
+
+public boolean accountExistsChecker(String email){
+   
+   return loginRepo.findByEmail(email).isPresent();
+}
+
 }

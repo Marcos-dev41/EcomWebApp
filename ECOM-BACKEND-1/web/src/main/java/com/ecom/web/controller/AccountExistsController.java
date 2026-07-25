@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AccountExistsController {
-    // @Autowired
-    // private AccountExistsService accountExistsService;
+    @Autowired
+    private AccountExistsService accountExistsService;
     
-    // @RequestMapping("/account")
-    // public ResponseEntity<Boolean> accountExists(@RequestBody User user){
-    //     boolean exists = accountExistsService.accountExistsChecker(user.getEmail());
-    //     return ResponseEntity.ok(exists);
-    // }
+    @RequestMapping("/account")
+    public ResponseEntity<Boolean> accountExists(@RequestBody User user){
+        boolean exists = accountExistsService.accountExistsChecker(user.getEmail());
+        return ResponseEntity.ok(exists);
+    }
 }
