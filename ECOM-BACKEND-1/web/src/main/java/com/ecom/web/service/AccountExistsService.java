@@ -10,10 +10,15 @@ import com.ecom.web.repository.*;
 public class AccountExistsService {
     @Autowired
     private LoginRepo loginRepo;
+    @Autowired
+    private EmailService emailService;
 
 public boolean accountExistsChecker(String email){
-   
-   return loginRepo.findByEmail(email).isPresent();
-}
+      System.out.println("hello");
 
+   Boolean emailExists =  loginRepo.findByEmail(email).isPresent();
+   System.out.println(email);
+     if(emailExists) System.out.println("hello"); emailService.sendResetPasswordMail(email);
+     return emailExists;
+}
 }

@@ -30,6 +30,15 @@ public void sendPaymentFailure(String toEmail ,Order order){
     message.setText("Your payment of ksh " + order.getOrderTotal() + " has been FAILED. please try again");
     mailSender.send(message);
 }
+@Async
+public void sendResetPasswordMail(String toEmail){
+    SimpleMailMessage message = new SimpleMailMessage();
+
+    message.setTo(toEmail);
+    message.setSubject("MoniMart Password Reset");
+    message.setText("Click the link below to reset your account password" + "\n Password Reset Link");
+    mailSender.send(message);
+}
 
 @Async
 public void sendRegistrationMail(String toEmail){
@@ -39,4 +48,6 @@ public void sendRegistrationMail(String toEmail){
     message.setText("Welcome to Monimart leading monitor sales e-commerce site");
     mailSender.send(message);
 }
+
+
 }
