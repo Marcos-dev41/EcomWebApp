@@ -26,6 +26,7 @@ public class LoginService {
     EmailService emailService;
 
     public void addAccount(User user){
+        System.out.println(user);
         String hashed  = encoder.encode(user.getUserPassword());
         user.setUserPassword(hashed);
         user.setRole("USER");
