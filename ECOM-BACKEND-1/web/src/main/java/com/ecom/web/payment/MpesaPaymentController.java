@@ -19,7 +19,7 @@ import com.ecom.web.service.*;
 
 @RestController
 @RequestMapping("/api/payments")
-public class PaymentController {
+public class MpesaPaymentController {
 
     @Autowired
     private DarajaService darajaService;
@@ -33,7 +33,7 @@ public class PaymentController {
     @GetMapping("/test-token")
     public String testToken() {
         return darajaService.getAccessToken();
-    }
+    } 
 
     @PostMapping("/stkpush/{orderId}")
     public Map<String,Object> triggerStkPush(@PathVariable Integer orderId,@RequestParam String phoneNumber){
