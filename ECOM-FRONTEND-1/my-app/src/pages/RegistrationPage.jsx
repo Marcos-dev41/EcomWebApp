@@ -27,6 +27,7 @@ export default function RegistrationPage() {
 
     try {
         const response = await api.post('/auth/register', {
+            email:email,
             userPassword: userPassword
         });
         console.log("Registered:", response.data);
