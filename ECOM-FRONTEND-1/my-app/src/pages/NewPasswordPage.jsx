@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import GlobalNav from '../components/GlobalNav'
 
 import api from '../axioxInstance';
@@ -10,6 +11,9 @@ export default function NewPasswordPage() {
     const[userPassword,setUserPassword] = useState("");
     const[confirmPass,setConfirmPass] = useState("");
     const[error,setError] = useState("");
+
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get("token");
 
     
 
@@ -22,7 +26,8 @@ export default function NewPasswordPage() {
     }
 
     try {
-        const response = await api.post('/auth/register', {
+        const response = await api.post('/auth/reset-password', {
+            token: token,
             userPassword: userPassword
         });
         console.log("changed password:", response.data);

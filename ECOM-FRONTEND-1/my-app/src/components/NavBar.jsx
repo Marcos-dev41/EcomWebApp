@@ -9,6 +9,8 @@ import { useCart } from '../pages/CartContext'
 export default function 
 () {
     const {cart} = useCart();
+
+    // checking if user is logged in and updating status 
     
      
 

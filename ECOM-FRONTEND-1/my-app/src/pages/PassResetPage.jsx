@@ -11,7 +11,7 @@ export default function PassResetPage() {
     const handleSubmit = ((e) => {
         e.preventDefault();
         
-    api.post("/auth/account", { "email": email })
+    api.post("/auth/forgot-password", { "email": email })
         .then((response) => {
             console.log(response.data);
             if(response.data == true){
