@@ -68,7 +68,7 @@ export default function CartPage() {
     <>
       <GlobalNav />
       <div className=' flex  flex-col items-center w-full max-w-2xl p-5 mx-auto mt-2  border-2 rounded-2xl'>
-        <div className='w-full rounded-2xl text-center bg-orange-400 p-3  text-white text-xl font-bold mb-4'>
+        <div className='w-full rounded-2xl text-center bg-orange-500 p-3  text-white text-xl font-bold mb-4'>
           <h2>Cart</h2>
         </div>
 
@@ -133,7 +133,7 @@ export default function CartPage() {
             </div>
 
             <button 
-              className='bg-orange-400 hover:scale-102 disabled:opacity-50 text-white font-semibold rounded-2xl px-5 py-2.5 transition-colors' 
+              className='bg-orange-500 hover:scale-102 disabled:opacity-50 text-white font-semibold rounded-2xl px-5 py-2.5 transition-colors' 
               onClick={handleCheckout}
               disabled={isSubmitting || cart.length === 0}
             >

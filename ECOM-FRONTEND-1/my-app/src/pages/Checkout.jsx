@@ -60,8 +60,9 @@ export default function CheckoutPage() {
     return (
         <div>
             <GlobalNav />
+            <div className='flex flex-col p-5 items-center'>
             <div className='flex flex-col m-5 p-4 w-96 border rounded-lg shadow-sm'>
-                <div className='rounded bg-orange-400 text-center text-xl p-2 font-semibold text-white'>
+                <div className='rounded bg-orange-500 text-center text-xl p-2 font-semibold text-white'>
                     <h1>Checkout Page</h1>
                 </div>
 
@@ -70,7 +71,7 @@ export default function CheckoutPage() {
                 {/* --- M-PESA CHECKOUT --- */}
                 {paymentMethod === "mpesa" && (
                     <form className='flex flex-col gap-3' onSubmit={handleMpesaPayment}>
-                        <h2 className='font-semibold'>Pay via M-Pesa</h2>
+                        <h2 className='font-semibold text-center'>Pay via M-Pesa</h2>
                         <input 
                             type="tel" 
                             placeholder='2547XXXXXXXX' 
@@ -82,7 +83,7 @@ export default function CheckoutPage() {
                         />
                         <button 
                             type="submit" 
-                            className='bg-orange-400 hover:bg-orange-500 rounded p-2 font-bold text-white transition-colors'
+                            className='bg-orange-500 hover:scale-y-102 rounded p-2 font-bold text-white transition-colors'
                         >
                             Place Order
                         </button>
@@ -92,9 +93,9 @@ export default function CheckoutPage() {
                 {/* --- PAYPAL CHECKOUT --- */}
                 {paymentMethod === "paypal" && (
                     <div className='flex flex-col gap-2'>
-                        <h2 className='font-semibold mb-2'>Pay with PayPal</h2>
+                        <h2 className='font-semibold mb-2 text-center'>Pay with PayPal</h2>
                         <PayPalButtons 
-                            style={{ layout: "vertical", color: "gold", shape: "rect", label: "pay" }}
+                            style={{ layout: "vertical", color: "gold", shape: "pill", label: "pay" }}
                             createOrder={handleCreatePayPalOrder}
                             onApprove={handleApprovePayPalOrder}
                             onError={(err) => {
@@ -113,5 +114,6 @@ export default function CheckoutPage() {
                 )}
             </div>
         </div>
+    </div>
     );
 }

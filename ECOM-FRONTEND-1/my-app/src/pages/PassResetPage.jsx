@@ -36,18 +36,21 @@ export default function PassResetPage() {
   return (
     <>
     <GlobalNav/>
-    <div className='flex  flex-col items-center p-2 m-2'>
-        <div className='bg-orange-400 w-60 text-center p-2 rounded-2xl'>
-            <h2 className='font-bold'>Password Reset</h2>
+    <div className='flex flex-col p-5 items-center'>
+    <div className='flex flex-col justify-around w-full 2xl:max-w-[600px] items-center m-5 bg-gray-100 rounded-2xl p-5 h-fit'>
+        <div className='bg-orange-500 w-65 text-center p-2 rounded-2xl'>
+            <h2 className='font-semibold'>Password Reset</h2>
         </div>
     
-    <form className='flex flex-col mt-3 w-fit'>
+    <form className='flex flex-col mt-3 w-fit text-center'>
+        <p className='text-gray-400 mt-2'>Enter your Email below</p>
         <input type="email" name="email"  value={email}
-  onChange={(e) => setEmail(e.target.value)} className='border-2 w-60 p-2 rounded-2xl font-semibold' placeholder='Enter your email'/>
+  onChange={(e) => setEmail(e.target.value)} className='border-1 hover:outline-orange-500 w-65 p-2  mt-2 rounded-2xl font-semibold text-center' placeholder='johndoe@gmail.com'/>
         <br />
-        <button className='border-2 p-2 rounded-2xl w-full bg-orange-400 text-white font-semibold' onClick={handleSubmit}>Submit</button>
+        <button className='border-2 p-2 rounded-2xl w-full bg-orange-500 text-white font-semibold hover:scale-102' onClick={handleSubmit}>Submit</button>
     </form>
-    <p className='text-red-400'>{status}</p>
+    <p className='text-red-500'>{status}</p>
+    </div>
     </div>
     </>
     

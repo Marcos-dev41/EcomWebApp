@@ -11,18 +11,18 @@ export default function
 
 
   return (
-    <div className='w-full flex flex-row justify-around bg-orange-400 h-13 items-center font-semibold'>
+    <div className='w-full flex flex-row justify-around bg-orange-500 h-13 items-center font-semibold'>
         <h1 className='text-2xl'>MoniMart</h1>
         
         <div className='flex flex-row justify-between pl-5 pr-5 gap-4'>
-            <Link to={"/products"}><img src={store} alt="" width=" 33px" height="30px" className='opacity-85' /></Link>
-            <Link to={"/notifications"} ><img src={bell} alt="" width=" 33px" height="30px" className='opacity-85' /></Link>
-            <Link to={"/cart"}><img src={cart} alt="" width=" 35px" height="30px" className='opacity-85'/></Link>
+            <Link to={"/products"}><img src={store} alt="" width=" 33px" height="30px" className='opacity-85 hover:scale-102' /></Link>
+            <Link to={"/notifications"} ><img src={bell} alt="" width=" 33px" height="30px" className='opacity-85 hover:scale-102' /></Link>
+            <Link to={"/cart"}><img src={cart} alt="" width=" 35px" height="30px" className='opacity-85 hover:scale-102 active:bg-red-400'/></Link>
         </div>
         <div className='flex flex-row justify-between w-32 items-center'>
-            <a href="#"><img src={user} alt="" width=" 35px" height="35px" className='opacity-90' /></a>
+            <a href="#"><img src={user} alt="" width=" 35px" height="35px" className='opacity-90 hover:scale-102' /></a>
              <div className='flex flex-col items-center text-start h-12'>
-                    { jwtToken ? <h3 className='text-sm text-green-700 m-3 font-semibold'>logged in</h3> : <Link to={"/login"}><h3 className='font-semibold  text-sm m-3'>Log in</h3></Link>}
+                    { jwtToken ? <h3 className='text-sm text-green-700 m-3 hover:scale-102 font-semibold'>logged in</h3> : <Link to={"/login"}><h3 className='font-semibold hover:scale-102 rounded bg-blue-600 p-2 text-gray-200 pl-3 pr-3 text-sm m-1'>Log in</h3></Link>}
              </div>
         </div>
         

@@ -14,8 +14,8 @@ export default function ProductComp({product}) {
     }
   
   return (
-    <div className="bg-white rounded-2xl p-3 relative flex flex-col hover: justify-center border-2-gray w-60 shadow-sm-gray text-center hover:scale-102">
-       <div className='hover:opacity-90'>
+    <div className="bg-white rounded-2xl p-3 relative flex flex-col  justify-center border-2-gray w-60 shadow-sm-gray text-center hover:scale-102">
+       <div className='hover:scale-103'>
             <img src={pic} alt="monitor pic" width={200} />
        </div>
        

@@ -14,7 +14,7 @@ const {removeFromCart} = useCart()
 });
 
   return (
-    <div className='flex flex-row p-4 rounded-xl  justify-between w-fit mt-4 items-center h-30 border-2 hover:scale-102'>
+    <div className='flex flex-row p-4 rounded-xl justify-between w-fit mt-4 items-center h-30 border-2 hover:scale-102'>
         <img src={cartimg} alt="" width={70} />
         <div className='flex flex-row justify-around w-90'>
         <div className='p-1  flex flex-col w-50 items-center'>
@@ -27,7 +27,7 @@ const {removeFromCart} = useCart()
             <h4 className = "text-green-500 ">InStock</h4>
         </div>
         </div>
-        <button className=" mt-2 p-2 pl-5 pr-5 rounded-5xl text-blue-900 font-semibold text-base hover:text-red-400 "onClick={() => removeFromCart(item.prodId)}>
+        <button className=" mt-2 p-2 pl-5 pr-5 rounded-5xl text-blue-900 font-semibold text-base hover:text-red-500 "onClick={() => removeFromCart(item.prodId)}>
            Remove
         </button>
     </div>
