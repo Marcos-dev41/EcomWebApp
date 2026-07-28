@@ -12,11 +12,10 @@ import CheckoutPage from './pages/Checkout';
 import NotificationsPage from './pages/NotificationsPage';
 import CartProvider  from './pages/CartContext'; 
 
-const clientId=import.meta.env.PAYPAL_CLIENT_ID;
-console.log("Client ID:", import.meta.env.VITE_PAYPAL_CLIENT_ID);
-// PayPal configuration options
+const clientId=import.meta.env.VITE_PAYPAL_CLIENT_ID;
+// paypal configs
 const initialPaypalOptions = {
-  "client-id": "AXUcr-feNFM0FksKFfEP_iVu1-BlcJZpMZl0U7T3Q0Fsrz3iOwrV3sbbxsGuqbDx9zKRRqSv3o-i7fMv", // Replace with your actual Sandbox Client ID
+  "client-id": `${clientId}` , 
   currency: "USD",
   intent: "capture",
 };
