@@ -41,12 +41,12 @@ public void sendPaymentFailure(String toEmail ,Order order){
     mailSender.send(message);
 }
 @Async
-public void sendResetPasswordMail(String toEmail){
+public void sendResetPasswordMail(String toEmail,String resetLink){
     SimpleMailMessage message = new SimpleMailMessage();
     message.setFrom(senderEmail);
     message.setTo(toEmail);
     message.setSubject("MoniMart Password Reset");
-    message.setText("Click the link below to reset your account password" + "\n Password Reset Link");
+    message.setText("Click the link below to reset your account password" + "\n Password Reset Link:"+ resetLink);
     mailSender.send(message);
 }
 
