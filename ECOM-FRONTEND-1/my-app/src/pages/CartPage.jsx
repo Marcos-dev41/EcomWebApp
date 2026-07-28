@@ -67,8 +67,8 @@ export default function CartPage() {
   return (
     <>
       <GlobalNav />
-      <div className='w-full max-w-2xl p-5 mx-auto mt-2 min-h-screen rounded-2xl'>
-        <div className='w-full rounded-2xl flex flex-row text-center bg-orange-400 p-3 text-white text-xl font-bold mb-4'>
+      <div className=' flex  flex-col items-center w-full max-w-2xl p-5 mx-auto mt-2  border-2 rounded-2xl'>
+        <div className='w-full rounded-2xl text-center bg-orange-400 p-3  text-white text-xl font-bold mb-4'>
           <h2>Cart</h2>
         </div>
 
@@ -80,7 +80,7 @@ export default function CartPage() {
           ))
         )}
 
-        <div className='flex flex-col gap-4 p-5 mt-5 w-full border-2 rounded-2xl bg-white shadow-sm'>
+        <div className='flex flex-col gap-4 p-5 mt-5 w-full  border-2 rounded-2xl bg-white shadow-sm'>
           
           <div className='flex flex-col gap-2 text-left'>
             <label className='font-bold text-gray-700 text-sm'>Select Payment Method:</label>
@@ -133,7 +133,7 @@ export default function CartPage() {
             </div>
 
             <button 
-              className='bg-orange-400 hover:bg-orange-500 disabled:opacity-50 text-white font-semibold rounded-2xl px-5 py-2.5 transition-colors' 
+              className='bg-orange-400 hover:scale-102 disabled:opacity-50 text-white font-semibold rounded-2xl px-5 py-2.5 transition-colors' 
               onClick={handleCheckout}
               disabled={isSubmitting || cart.length === 0}
             >

@@ -28,7 +28,7 @@ export default function ProductList() {
   return (
     <>
     <NavBar/>
-    <div className='flex flex-wrap justify-around gap-15'>
+    <div className='flex flex-wrap justify-around m-2 gap-15'>
         {message.map((item)=>(
           <Product key={item.prodId} product={item}/>
         ))

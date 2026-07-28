@@ -14,8 +14,11 @@ export default function ProductComp({product}) {
     }
   
   return (
-    <div className="bg-white rounded-2xl p-2 relative flex flex-col justify-center border-2-gray w-50 text-center">
-        <img src={pic} alt="monitor pic" />
+    <div className="bg-white rounded-2xl p-3 relative flex flex-col hover: justify-center border-2-gray w-60 shadow-sm-gray text-center hover:scale-102">
+       <div className='hover:opacity-90'>
+            <img src={pic} alt="monitor pic" width={200} />
+       </div>
+       
 
         <div className='p-2'>
             <h2 className='h-10 font-medium'>{product.prodName}</h2>
@@ -26,7 +29,7 @@ export default function ProductComp({product}) {
             <h4 className = "text-green-500 "> {product.available ? "In stock" : "Out of stock"}</h4>
         </div>
 
-        <button className="bg-orange-200 mt-2 p-2 pl-5 pr-5 rounded-2xl " onClick={handleAddtoCart}>
+        <button className="bg-orange-200 hover:bg-orange-500 mt-2 p-2 pl-5 pr-5 rounded-2xl " onClick={handleAddtoCart}>
            {product.available ? "Add to cart" : "Out of stock"}
         </button>
         {showAlert && (

@@ -23,7 +23,7 @@ export default function
      
 
   return (
-    <div className='w-full flex flex-row justify-around bg-orange-400 h-13 items-center font-semibold'>
+    <div className=' flex flex-row justify-around w-full bg-orange-500 h-fit p-1 items-center font-semibold shadow-md'>
         <h1 className='text-2xl'>MoniMart</h1>
         <input className='bg-orange-100 rounded-2xl w-80 p-2 pl-5' type="search" placeholder='search...'/>
         <div className='flex flex-row justify-between pl-5 pr-5 gap-4'>
