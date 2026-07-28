@@ -30,12 +30,10 @@ export default function CartPage() {
       console.log("order response:", response.data);
       const order = response.data;
       clearCart(); 
+      navigate(`/checkout/${order.orderId}`, {
+      state: { paymentMethod } // e.g., 'PAYPAL' or 'MPESA'
+    });
 
-      if (paymentMethod === "mpesa") {
-         navigate(`/checkout/${order.orderId}`)
-      } else {
-        navigate(`/checkout/${order.orderId}`);
-      }
     } catch (error) {
       console.error("Checkout Failed", error);
     } finally {
