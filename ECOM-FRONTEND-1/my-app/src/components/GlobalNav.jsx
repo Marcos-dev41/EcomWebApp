@@ -7,7 +7,8 @@ import { Link } from 'react-router-dom'
 
 export default function 
 () {
-    
+    const jwtToken = localStorage.getItem("token")
+
 
   return (
     <div className='w-full flex flex-row justify-around bg-orange-400 h-13 items-center font-semibold'>
@@ -20,10 +21,9 @@ export default function
         </div>
         <div className='flex flex-row justify-between w-32 items-center'>
             <a href="#"><img src={user} alt="" width=" 35px" height="35px" className='opacity-90' /></a>
-            <div className='flex flex-col items center text-start h-12'>
-                <h3 className='font-semibold m-0'>Mark</h3>
-                <p className='font-normal m-0'>logged In</p>
-            </div>
+             <div className='flex flex-col items-center text-start h-12'>
+                    { jwtToken ? <h3 className='text-sm text-green-700 m-3 font-semibold'>logged in</h3> : <Link to={"/login"}><h3 className='font-semibold  text-sm m-3'>Log in</h3></Link>}
+             </div>
         </div>
         
     </div>

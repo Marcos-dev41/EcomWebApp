@@ -10,7 +10,15 @@ export default function
 () {
     const {cart} = useCart();
 
-    // checking if user is logged in and updating status 
+    
+    // checking if user is logged in and updating status
+    // check if a jwt token exists in local storage
+   const jwtToken = localStorage.getItem("token")
+    const status = jwtToken ? "User is logged in" : "No token found";
+    console.log(status)
+        // if it doesnot exitst show button to log in
+        // if it exists check if sessio is expired if yes they have to login again
+        // if not show user logged in
     
      
 
@@ -24,11 +32,12 @@ export default function
                 {cart.length > 0 ? <img src={addedcart} alt="" width=" 35px" height="35px" className='opacity-85'/>:<img src={cartimg} alt="" width=" 35px" height="35px" className='opacity-85'/>}
             </Link>
         </div>
-        <div className='flex flex-row justify-between w-32 items-center'>
-            <a href="#"><img src={user} alt="" width=" 35px" height="35px" className='opacity-90' /></a>
+        <div className='flex flex-row justify-between w-fit items-center'>
+            <img src={user} alt="" width=" 35px" height="35px" className='opacity-90' />
             <div className='flex flex-col items-center text-start h-12'>
-                <Link to={"/register"}><h3 className='font-semibold m-3'>Register</h3></Link>
-                {/* <p className='font-normal m-0'>logged In</p> */}
+                
+                { jwtToken ? <h3 className='text-sm text-green-700 m-3 font-semibold'>logged in</h3> : <Link to={"/login"}><h3 className='font-semibold  text-sm m-3'>Log in</h3></Link>}
+                
             </div>
         </div>
         

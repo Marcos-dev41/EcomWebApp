@@ -32,6 +32,9 @@ export default function NotificationsPage() {
     <div>
         <GlobalNav/>
       <h2 className="text-xl m-2 p-2 text-center">Orders</h2>
+
+
+       {orders > 0  ?<p className="text-center text-gray-500 py-8">No notificaions for now.</p>:<p></p>}
       <div className="flex  flex-col items-center">
       {orders.map((order) => (
         <div key={order.orderId}  className=" flex flex-row font-semibold justify-around items-center  w-fill border-2 m-2 w-150 rounded-2xl p-2">
