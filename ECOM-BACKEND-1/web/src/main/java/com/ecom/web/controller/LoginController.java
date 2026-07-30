@@ -26,7 +26,7 @@ public class LoginController {
      @Autowired
     JwtUtil jwtUtil;
 
-    @PostMapping("/login")
+    @RequestMapping("/login")
     public ResponseEntity<Map<String,String>> login(@RequestBody User user) {
         // Assume service returning a boolean or a user object checking password matching
         boolean isAuthenticated = service.checkCredentials(user); 
