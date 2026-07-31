@@ -38,7 +38,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/api/paypal/**").permitAll()
+            .requestMatchers("/api/checkout/pay").permitAll()
             .requestMatchers("/api/api/paypal/create-order").permitAll()
             .requestMatchers("/api/payments/callback").permitAll()
             .requestMatchers("/api/payment/checkout").authenticated()

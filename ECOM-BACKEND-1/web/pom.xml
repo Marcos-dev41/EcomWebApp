@@ -100,16 +100,21 @@
 	</dependency>
  		 <!-- for the email smtp server -->
 	<dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-mail</artifactId>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-mail</artifactId>
     </dependency>
+	<!--For my rabbitmq server  -->
+	<dependency>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-amqp</artifactId>
+	</dependency>
 
-<dependency>
-    <groupId>com.paypal.sdk</groupId>
-    <artifactId>paypal-server-sdk</artifactId>
-    <version>2.3.0</version>
-    <scope>compile</scope>
-</dependency>
+	<dependency>
+    	<groupId>com.paypal.sdk</groupId>
+    	<artifactId>paypal-server-sdk</artifactId>
+    	<version>2.3.0</version>
+    	<scope>compile</scope>
+	</dependency>
 
 	</dependencies>
 
