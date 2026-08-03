@@ -42,7 +42,7 @@ export default function LoginPage() {
         <div className='flex flex-col justify-around w-full 2xl:max-w-[600px] items-center m-5 bg-gray-100 rounded-2xl p-5 h-fit '>
             <img src={logo} alt="logo"  width={200} />
             <h3 className='font-semibold text-lg mt-3 text-orange-500'>
-                Welcome to back Monisales
+                Welcome to back MoniMart
             </h3>
             <p className='text-gray-400 mt-3'>
                 Login to your account

@@ -36,7 +36,7 @@ public class CheckoutController {
     public ResponseEntity<?> initiatePayment(@RequestBody CheckoutRequestDto request) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = auth.getName(); // adjust if your principal exposes id differently
+        String userId = auth.getName(); // authentication checking
         Order order = orderRepository.findById(request.getOrderId())
                 .orElseThrow(() -> new RuntimeException("Order not found: " + request.getOrderId()));
 

@@ -44,7 +44,7 @@ export default function RegistrationPage() {
     <div className='flex flex-col justify-around items-center w-full 2xl:max-w-[600px] m-5 bg-gray-200 rounded-2xl p-5 h-full'>
         <img src={logo} alt="logo"  width={200} />
         <h3 className='font-semibold m-3 text-'>
-            Welcome to Moni sales
+            Welcome to MoniMart
         </h3>
         <p className='m-2'>
             Create a new account
