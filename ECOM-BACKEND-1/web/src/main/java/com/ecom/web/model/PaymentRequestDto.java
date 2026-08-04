@@ -15,8 +15,9 @@ public class PaymentRequestDto {
     private BigDecimal amount;
     private String currency;
     private String provider;
-    private String userId;
+    private Integer userId;
     private String phoneNumber;
+    private String email;
     private String correlationId;
 
     // constructor, getters/setters

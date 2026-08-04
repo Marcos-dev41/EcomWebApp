@@ -35,27 +35,31 @@ public class CheckoutController {
     @PostMapping("/pay")
     public ResponseEntity<?> initiatePayment(@RequestBody CheckoutRequestDto request) {
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userId = auth.getName(); // authentication checking
         Order order = orderRepository.findById(request.getOrderId())
                 .orElseThrow(() -> new RuntimeException("Order not found: " + request.getOrderId()));
+        
+        String email = order.getUser().getEmail();
 
     
-
+        //  Here I  setup the json body going to my broker -> payment microservice
+        
         PaymentRequestDto dto = new PaymentRequestDto();
         dto.setOrderId(order.getOrderId());
         dto.setAmount(order.getOrderTotal());
         dto.setCurrency("KES");
         dto.setProvider("mpesa");
-        dto.setUserId(userId);
+        dto.setUserId(order.getUser().getUserId());
         dto.setPhoneNumber(request.getPhoneNumber());
+        dto.setEmail(email);
         dto.setCorrelationId(UUID.randomUUID().toString());
         
 
-        order.setOrderStatus("PENDING_PAYMENT");
+        order.setOrderStatus("PENDING");
         orderRepository.save(order);
 
         publisher.publishMpesaRequest(dto);
+
+        // message showing the payment request has been published into my broker waiting for the payment service
 
         return ResponseEntity.accepted().body(Map.of(
                 "message", "Payment initiated",
