@@ -21,7 +21,7 @@ export default function CheckoutPage() {
         setStatus("Sending payment request...");
 
         try {
-            await api.post(`/payments/stkpush/${orderId}?phoneNumber=${phoneNumber}`);
+        await api.post(`/checkout/pay`,{orderId, phoneNumber});
             setStatus("Check your phone to complete payment.");
         } catch (error) {
             console.error("STK push failed", error);
