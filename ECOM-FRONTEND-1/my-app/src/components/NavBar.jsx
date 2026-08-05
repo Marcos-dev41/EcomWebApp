@@ -16,6 +16,23 @@ export default function
    const jwtToken = localStorage.getItem("token")
     const status = jwtToken ? "User is logged in" : "No token found";
     console.log(status)
+    const payloadBase64 = jwtToken.split('.')[1]; // Get the second part
+    const payloadJson = atob(payloadBase64);    // Decode Base64
+    const payload = JSON.parse(payloadJson);
+
+// Convert Unix timestamp (seconds) to JS Date (milliseconds)
+    const expiryDate = new Date(payload.exp * 1000); 
+    console.log("Expires at:", expiryDate.toLocaleString());
+    console.log("Issued at:", new Date(payload.iat * 1000).toLocaleString());
+
+    const currentTime = new Date();
+
+    if (expiryDate <= currentTime){
+        console.log("logged out");
+        localStorage.removeItem("token");
+    }else{
+        console.log("logged in")
+    }
         // if it doesnot exitst show button to log in
         // if it exists check if sessio is expired if yes they have to login again
         // if not show user logged in
