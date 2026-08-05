@@ -19,12 +19,12 @@ export default function ProductList() {
           })
           .catch(error => {
             console.error("fetch error", error);
-            setLoading(false);
+            // setLoading(false);
           });
       }, []);
     
      
-      if (loading) return <p className='text-green'>loading ...</p>;
+      if (loading) return (<> <NavBar/> <p className='text-green'>loading products ...</p></> );
   return (
     <>
     <NavBar/>
