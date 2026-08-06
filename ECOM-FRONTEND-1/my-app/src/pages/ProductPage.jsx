@@ -19,7 +19,7 @@ export default function ProductList() {
           })
           .catch(error => {
             console.error("fetch error", error);
-            // setLoading(false);
+            setLoading(false);
           });
       }, []);
     
