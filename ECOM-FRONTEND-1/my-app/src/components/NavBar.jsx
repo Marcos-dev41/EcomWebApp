@@ -16,28 +16,39 @@ export default function
    const jwtToken = localStorage.getItem("token")
     const status = jwtToken ? "User is logged in" : "No token found";
     console.log(status)
-    const payloadBase64 = jwtToken.split('.')[1]; // Get the second part
-    const payloadJson = atob(payloadBase64);    // Decode Base64
-    const payload = JSON.parse(payloadJson);
 
-// Convert Unix timestamp (seconds) to JS Date (milliseconds)
-    const expiryDate = new Date(payload.exp * 1000); 
+    const expiryDate = (() => {
+  if (!jwtToken) return null;
+
+  try {
+    // 1. Extract the payload
+    let payloadBase64 = jwtToken.split('.')[1];
+    if (!payloadBase64) return null;
+
+    // 2. Normalize Base64Url to standard Base64
+    payloadBase64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
+    while (payloadBase64.length % 4) {
+      payloadBase64 += '=';
+    }
+
+    // 3. Decode payload and extract expiration date
+    const payload = JSON.parse(atob(payloadBase64));
     console.log("Expires at:", expiryDate.toLocaleString());
     console.log("Issued at:", new Date(payload.iat * 1000).toLocaleString());
+    return payload.exp ? new Date(payload.exp * 1000) : null;
+  } catch (error) {
+    console.error("Invalid JWT token:", error);
+    return null;
+  }
+});
+
+    
 
     const currentTime = new Date();
 
-    if (expiryDate <= currentTime){
-        console.log("logged out");
+    function logout(){
         localStorage.removeItem("token");
-    }else{
-        console.log("logged in")
     }
-        // if it doesnot exitst show button to log in
-        // if it exists check if sessio is expired if yes they have to login again
-        // if not show user logged in
-    
-     
 
   return (
     <div className=' flex flex-row justify-around w-full bg-orange-500 h-fit p-1 items-center font-semibold shadow-md'>
@@ -53,7 +64,7 @@ export default function
             <img src={user} alt="" width=" 35px" height="35px" className='opacity-90 hover:scale-102 mr-1' />
             <div className='flex flex-col items-center text-start h-12'>
                 
-                { jwtToken ? <h3 className='text-base text-green-700 m-3 mt-4 hover:scale-102 font-semibold'>logged in</h3> : <Link to={"/login"}><h3 className='font-semibold hover:scale-102 rounded bg-blue-600 p-2 text-gray-200 pl-3 pr-3 text-sm m-1'>Log in</h3></Link>}
+                { jwtToken ? <Link to={"/login"}> <button className='text-base m-1 hover:scale-102 bg-red-600 p-2 font-semibold' onClick={logout}>logout</button> </Link>: <Link to={"/login"}><h3 className='font-semibold hover:scale-102 rounded bg-blue-600 p-2 text-gray-200 pl-3 pr-3 text-sm m-1'>Log in</h3></Link>}
                 
             </div>
         </div>
