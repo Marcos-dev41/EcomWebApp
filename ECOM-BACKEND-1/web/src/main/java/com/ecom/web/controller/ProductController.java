@@ -25,7 +25,6 @@ public class ProductController {
 
     @RequestMapping ("/")
     public String homePage(){
-        // returning pproducts json info from my db
         return "Welcome home"; 
     }
     @RequestMapping("/products")
