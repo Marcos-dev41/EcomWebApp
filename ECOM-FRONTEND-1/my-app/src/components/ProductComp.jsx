@@ -6,11 +6,15 @@ import { useCart } from '../pages/CartContext'
 export default function ProductComp({product}) {
     const {addToCart} = useCart()
     const [showAlert,setShowAlert]  = useState(false)
+    const [add,setAdded]  = useState("Add to Cart")
 
     function handleAddtoCart(){
-      addToCart(product.prodId)
-      setShowAlert(true);
-    setTimeout(() => setShowAlert(false), 1500);
+      if(product.available){
+        setAdded("Added!")
+        setTimeout(()=>setAdded(add),1000)
+        addToCart(product.prodId)
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 1500);}
     }
   
   return (
@@ -26,11 +30,11 @@ export default function ProductComp({product}) {
 
         <div className="flex  flex-col flex-start font-semibold justify-around">
             <h4> Ksh {product.price}</h4>
-            <h4 className = "text-green-500 "> {product.available ? "In stock" : "Out of stock"}</h4>
+            {product.available ? <h4 className='text-sm text-green-500'>In Stock</h4> : <h4 className='text-sm text-red-500'>Out of stock</h4>}
         </div>
 
         <button className="bg-orange-200 hover:bg-orange-500 mt-2 p-2 pl-5 pr-5 rounded-2xl " onClick={handleAddtoCart}>
-           {product.available ? "Add to cart" : "Out of stock"}
+           {product.available ? <p>{add}</p> : "Not Available"}
         </button>
         {showAlert && (
         <div className="absolute top-0 left-0 bg-green-500 text-white text-sm px-2 py-1 rounded-2xl">
