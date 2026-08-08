@@ -67,7 +67,7 @@ export default function CartPage() {
   return (
     <>
       <GlobalNav />
-      <div className=' flex  flex-col items-center w-full max-w-2xl p-5 mx-auto mt-2  border-2 rounded-2xl'>
+      <div className=' flex  flex-col items-center w-full max-w-2xl p-5 mx-auto mt-2  rounded-2xl'>
         <div className='w-full rounded-2xl text-center bg-orange-500 p-3  text-white text-xl font-bold mb-4'>
           <h2>Cart</h2>
         </div>
@@ -80,7 +80,7 @@ export default function CartPage() {
           ))
         )}
 
-        <div className='flex flex-col gap-4 p-5 mt-5 w-full  border-2 rounded-2xl bg-white shadow-sm'>
+        <div className='flex flex-col gap-4 p-5 mt-5 w-full   rounded-2xl bg-white shadow-sm'>
           
           <div className='flex flex-col gap-2 text-left'>
             <label className='font-bold text-gray-700 text-sm'>Select Payment Method:</label>
