@@ -10,8 +10,6 @@ export default function
 () {
     const {cart} = useCart();
     const jwtToken = localStorage.getItem("token")
-    const status = jwtToken ? "User is logged in" : "No token found";
-    console.log(status)
 
 // fixed login state issue 
     const expiryDate = (() => {
@@ -34,6 +32,9 @@ export default function
     
 
   const currentTime = new Date().toLocaleString();
+  if(expiryDate >= currentTime){
+    localStorage.removeItem("token")
+  }
 
 
 // function to handle user logging out
@@ -56,7 +57,7 @@ export default function
             <img src={user} alt="" width=" 35px" height="35px" className='opacity-90 hover:scale-102 mr-1' />
             <div className='flex flex-col items-center text-start h-12'>
                 
-                {jwtToken && expiryDate >= currentTime ? <Link to={"/login"}> <button className='text-base m-1 hover:scale-102 bg-red-600 p-2 font-semibold' onClick={logout}>logout</button> </Link>: <Link to={"/login"}><h3 className='font-semibold hover:scale-102 rounded bg-blue-600 p-2 text-gray-200 pl-3 pr-3 text-sm m-1'>Log in</h3></Link>}
+                {jwtToken && expiryDate >= currentTime ? <Link to={"/login"}> <button className='text-base m-1 hover:scale-102 bg-red-600 p-2 font-semibold rounded' onClick={logout}>logout</button> </Link>: <Link to={"/login"}><h3 className='font-semibold hover:scale-102 rounded bg-blue-600 p-2 text-gray-200 pl-3 pr-3 text-sm m-1 '>Log in</h3></Link>}
                 
             </div>
         </div>
