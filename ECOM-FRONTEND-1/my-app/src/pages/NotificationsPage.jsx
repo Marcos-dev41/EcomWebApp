@@ -13,13 +13,32 @@ export default function NotificationsPage() {
         setLoading(false);
           })
       .catch((error) => {
+        setOrders(null)
         console.error("fetch error", error);
         setLoading(false);
       });
   }, []);
   
-
-  if (loading) return <p>Loading...</p>;
+if (loading) { 
+      return (
+        <> 
+          <GlobalNav/>
+          <div className='flex flex-col items-center h-100 p-3 text-center justify-center'>
+            <p className='text-green-300 text-center font-semibold text-sm'>Loading Orders...</p>
+          </div>
+        </>
+      );
+    }
+if (orders == null) { 
+          return (
+            <> 
+              <GlobalNav/> 
+              <div className='flex flex-col items-center h-100 p-3 text-center justify-center'>
+                <p className='text-gray-400 text-center'> No Orders for now</p>
+              </div>
+            </>
+          );
+        }
 
   const statusColors = {
   PAID: '#16a34a',     // Green
@@ -33,12 +52,12 @@ export default function NotificationsPage() {
         <GlobalNav/>
       <h2 className="text-xl m-2 p-2 text-center">Orders</h2>
 
-
        {orders > 0  ?<p className="text-center text-gray-500 py-8">No notificaions for now.</p>:<p></p>}
       <div className="flex  flex-col items-center">
       {orders.map((order) => (
         <div key={order.orderId}  className=" flex flex-row font-semibold justify-around items-center  w-fill border-2 m-2 w-150 rounded-2xl p-2">
           <p className="">Order #{order.orderId}</p>
+          {/* <p>{order.orderItems}</p> */}
           <p>Status:{' '}
         <span 
             style={{ 
