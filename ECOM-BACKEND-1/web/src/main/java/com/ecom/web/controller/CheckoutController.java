@@ -1,6 +1,9 @@
 package com.ecom.web.controller;
 
 import java.util.UUID;
+
+import javax.print.DocFlavor.STRING;
+
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -38,6 +41,8 @@ public class CheckoutController {
         
         String email = order.getUser().getEmail();
 
+        String correlationId = UUID.randomUUID().toString();
+
     
         //  Here I  setup the json body going to my broker -> payment microservice
         
@@ -49,10 +54,11 @@ public class CheckoutController {
         dto.setUserId(order.getUser().getUserId());
         dto.setPhoneNumber(request.getPhoneNumber());
         dto.setEmail(email);
-        dto.setCorrelationId(UUID.randomUUID().toString());
+        dto.setCorrelationId(correlationId);
         
 
         order.setOrderStatus("PENDING");
+        order.setCorrelationId(correlationId);
         orderRepository.save(order);
 
         publisher.publishMpesaRequest(dto);
