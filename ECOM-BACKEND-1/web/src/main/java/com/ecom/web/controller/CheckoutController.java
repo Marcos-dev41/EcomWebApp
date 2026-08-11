@@ -2,8 +2,6 @@ package com.ecom.web.controller;
 
 import java.util.UUID;
 
-import javax.print.DocFlavor.STRING;
-
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
