@@ -89,7 +89,7 @@
 	<dependency>
     		<groupId>org.projectlombok</groupId>
     		<artifactId>lombok</artifactId>
-    		<scope>compile</scope>
+    		<scope>provided</scope>
 		</dependency>
 		<!-- Source: https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java -->
 	<dependency>
