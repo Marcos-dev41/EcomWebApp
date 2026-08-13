@@ -1,6 +1,7 @@
 package com.ecom.web.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +39,19 @@ public class CreateOrderFromCart {
 
         for(CartItemRequest item : cartItems){
             Product product = productRepo.findById(item.getProdId()).orElse(null);
-            BigDecimal lineTotal = product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
-            total = total.add(lineTotal);
-
+          if (product.getDiscount() > 0) {
+    BigDecimal discountRate = BigDecimal.valueOf(product.getDiscount())
+        .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
+    BigDecimal discountedUnitPrice = product.getPrice()
+        .subtract(product.getPrice().multiply(discountRate))
+        .setScale(2, RoundingMode.HALF_UP);
+    BigDecimal lineTotal = discountedUnitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
+    total = total.add(lineTotal);
+    } else {
+    BigDecimal lineTotal = product.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+    total = total.add(lineTotal);
+            }          
+            
             OrderItem orderItem = new OrderItem();
             orderItem.setProdId(item.getProdId());
             orderItem.setQuantity(item.getQuantity());
