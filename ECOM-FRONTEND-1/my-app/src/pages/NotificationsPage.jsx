@@ -123,7 +123,7 @@ export default function NotificationsPage() {
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-semibold text-gray-400">Order</span>
                         <span className="font-mono text-sm font-bold text-white">
-                          #{order.orderId}
+                          {order.orderId}
                         </span>
                       </div>
                       <p className="mt-0.5 text-[11px] text-gray-500">
@@ -176,7 +176,7 @@ export default function NotificationsPage() {
                               className="flex items-center justify-between gap-3 rounded-xl border border-gray-800/80 bg-gray-900/80 p-3"
                             >
                               <div className="flex items-center gap-3 min-w-0">
-                                {item.imageUrl && (
+                                {item.imageUrl && ( 
                                   <img
                                     src={item.imageUrl}
                                     alt={item.prodName}
@@ -194,7 +194,7 @@ export default function NotificationsPage() {
                               </div>
 
                               <p className="text-xs font-bold text-white shrink-0">
-                                {formatKSh.format((item.price || 0) * (item.quantity || 1))}
+                                {formatKSh.format((item.priceAtOrderTime || 0) * (item.quantity || 1))}
                               </p>
                             </div>
                           ))}

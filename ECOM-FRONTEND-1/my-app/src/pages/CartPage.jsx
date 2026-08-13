@@ -38,8 +38,9 @@ export default function CartPage() {
     
     try {
       setIsSubmitting(true);
-      const response = await api.post("/payment/checkout", cart);
-      
+      const response = await api.post("/payment/checkout", cartWithDetails);
+      console.log(cartWithDetails)
+    
       const order = response.data;
       clearCart(); 
       navigate(`/checkout/${order.orderId}`, {
@@ -58,10 +59,12 @@ export default function CartPage() {
     return { ...item, ...productInfo };
   });
 
+
   const total = cartWithDetails.reduce((accumulator, item) => {
     return accumulator + ((item.price || 0) * item.quantity);
   }, 0);
 
+  
   return (
     <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
       <GlobalNav />
