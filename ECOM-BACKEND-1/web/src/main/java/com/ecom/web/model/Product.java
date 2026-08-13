@@ -25,6 +25,14 @@ public class Product {
     private Integer prodId;
     private String prodName;
     private boolean isAvailable;
+    private String category;
+    private String imageUrl;
+    private String screenSize;
+    private String resolution;
+    private String refreshRate;
+    private String brand;
+    private String connectivity;
     private String prodDescription;
     private BigDecimal price;
+    private Integer discount;
 }
