@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Product from '../components/ProductComp';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
+import ProductModal from '../components/ProductModal';
 import api from '../axioxInstance';
 
 export default function ProductList() {
@@ -11,6 +12,7 @@ export default function ProductList() {
   const [error, setError] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     api.get('/products')
@@ -116,8 +118,8 @@ export default function ProductList() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.25, ease: "easeInOut" }}
                 >
-                  <Product product={item} />
-                </motion.div>
+              <Product product={item} onSelect={(product) => setSelectedProduct(product)}/>  
+            </motion.div>
               ))}
             </AnimatePresence>
           </motion.div>
@@ -152,6 +154,13 @@ export default function ProductList() {
         )}
       </main>
 
+        {/* Pop-up Quick View Modal */}
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
       <Footer />
     </div>
   );

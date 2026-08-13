@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import pic from '../../src/assets/m1.png';
 import { useCart } from '../pages/CartContext';
 
-export default function ProductComp({ product }) {
+// 1. ADDED "onSelect" HERE TO THE DESTRUCTURED PROPS 👇
+export default function ProductComp({ product, onSelect }) {
   const { addToCart } = useCart();
   const [showAlert, setShowAlert] = useState(false);
   const [buttonText, setButtonText] = useState("Add to Cart");
 
-  function handleAddToCart() {
+  function handleAddToCart(e) {
+    e.stopPropagation(); // Stops the modal from opening when clicking "Add to Cart"
     if (product.available) {
       setButtonText("Added!");
       addToCart(product.prodId);
@@ -21,8 +23,19 @@ export default function ProductComp({ product }) {
   }
 
   return (
-    <div className="relative flex w-full flex-col justify-between overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 p-4 text-left transition-all duration-200 hover:border-gray-700 hover:shadow-lg hover:shadow-black/40">
-      
+    <div
+      onClick={() => onSelect && onSelect(product)}
+      className="relative flex w-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-gray-800 bg-gray-900 p-4 text-left transition-all duration-200 hover:border-gray-700 hover:shadow-lg hover:shadow-black/40"
+    >
+      {/* Discount Badge */}
+      {product.discount > 0 && (
+        <div className="absolute top-0 left-0 w-28 h-28 overflow-hidden z-10 pointer-events-none">
+          <div className="absolute top-6 -left-9 w-36 -rotate-45 bg-red-600 text-white font-bold text-center text-xs py-1 shadow-md uppercase tracking-wider">
+            {product.discount}% OFF
+          </div>
+        </div>
+      )}
+
       {/* Toast Alert Notification */}
       {showAlert && (
         <div className="absolute right-3 top-3 z-10 rounded-lg bg-emerald-500/90 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-md shadow-md animate-fade-in">
