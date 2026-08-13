@@ -48,7 +48,7 @@ export default function ProductComp({ product, onSelect }) {
         <img
           src={product.imageUrl || product.image || pic}
           alt={product.prodName || "Product image"}
-          className="max-h-full max-w-full object-contain transition-transform duration-300 hover:scale-105"
+          className="max-h-full max-w-full object-contain transition-transform duration-300 hover:scale-105" loading='lazy'
         />
         {!product.available && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-950/70 backdrop-blur-[1px]">
