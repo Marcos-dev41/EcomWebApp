@@ -44,7 +44,7 @@ export default function ProductComp({ product, onSelect }) {
       )}
 
       {/* Image Container */}
-      <div className="relative mb-3 flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-gray-950/60 p-4">
+      <div className="relative mb-3 flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-gray-950/60 p-4" loading="lazy">
         <img
           src={product.imageUrl || product.image || pic}
           alt={product.prodName || "Product image"}
