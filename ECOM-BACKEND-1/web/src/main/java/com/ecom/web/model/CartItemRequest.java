@@ -10,4 +10,6 @@ import lombok.Setter;
 public class CartItemRequest {
     private Integer prodId;
     private Integer quantity;
+    private String prodName;
+    private String imageUrl;
 }

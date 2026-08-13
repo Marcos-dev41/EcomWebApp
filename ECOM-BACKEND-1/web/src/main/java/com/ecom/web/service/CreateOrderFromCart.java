@@ -34,6 +34,8 @@ public class CreateOrderFromCart {
     public Order createOrderFromCart (List<CartItemRequest> cartItems){
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
+        System.out.println("hello bwoooooy-----------------------------------------------------------------------------------------");
+        System.out.println(cartItems);
 
 
 
@@ -55,6 +57,8 @@ public class CreateOrderFromCart {
             OrderItem orderItem = new OrderItem();
             orderItem.setProdId(item.getProdId());
             orderItem.setQuantity(item.getQuantity());
+            orderItem.setProdName(item.getProdName());
+            orderItem.setImageUrl(item.getImageUrl());
             orderItem.setPriceAtOrderTime(product.getPrice());
 
             orderItems.add(orderItem);

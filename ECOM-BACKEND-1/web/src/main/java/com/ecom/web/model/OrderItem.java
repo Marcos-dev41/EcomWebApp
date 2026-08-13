@@ -23,8 +23,9 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderItemId;
-
     private Integer prodId;
+    private String prodName;
+    private String imageUrl;
     private Integer quantity;
     private BigDecimal priceAtOrderTime;
 
