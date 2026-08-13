@@ -18,7 +18,7 @@ export default function Footer() {
             </p>
             
             {/* Newsletter Subscription */}
-            <div className="mt-6 max-w-md">
+            {/* <div className="mt-6 max-w-md">
               <span className="text-xs font-semibold uppercase tracking-wider text-gray-300">
                 Subscribe to updates
               </span>
@@ -35,8 +35,8 @@ export default function Footer() {
                 >
                   Join
                 </button>
-              </form>
-            </div>
+              // </form> */}
+            {/* </div> */}
           </div>
 
           {/* Quick Links Columns */}
@@ -63,12 +63,12 @@ export default function Footer() {
               </h3>
               <ul className="mt-4 space-y-2.5 text-sm">
                 <li>
-                  <Link to="/about" className="transition-colors hover:text-white">
+                  <Link to="/" className="transition-colors hover:text-white">
                     About us
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="transition-colors hover:text-white">
+                  <Link to="/" className="transition-colors hover:text-white">
                     Contact us
                   </Link>
                 </li> 
@@ -82,12 +82,12 @@ export default function Footer() {
               </h3>
               <ul className="mt-4 space-y-2.5 text-sm">
                 <li>
-                  <Link to="#" className="transition-colors hover:text-white">
+                  <Link to="/" className="transition-colors hover:text-white">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link to="#" className="transition-colors hover:text-white">
+                  <Link to="/" className="transition-colors hover:text-white">
                     Terms of Service
                   </Link>
                 </li>

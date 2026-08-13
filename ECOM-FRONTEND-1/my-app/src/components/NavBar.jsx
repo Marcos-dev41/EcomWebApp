@@ -87,14 +87,14 @@ export default function NavBar({search , setSearch}) {
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
           <Link
-            to="/about"
+            to="/"
             className="group relative py-1 transition-colors hover:text-blue-400"
           >
             About us
             <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-500 transition-all duration-200 group-hover:w-full" />
           </Link>
           <Link
-            to="/contact"
+            to="/"
             className="group relative py-1 transition-colors hover:text-blue-400"
           >
             Contact us
