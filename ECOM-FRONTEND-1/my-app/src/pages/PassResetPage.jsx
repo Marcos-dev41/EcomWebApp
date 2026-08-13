@@ -1,58 +1,117 @@
-import React, { useState } from 'react'
-import GlobalNav from '../components/GlobalNav'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import GlobalNav from '../components/GlobalNav';
+import Footer from '../components/Footer';
 import api from '../axioxInstance';
-import { useNavigate } from 'react-router-dom';
 
 export default function PassResetPage() {
-    const [email,setEmail] = useState("");
-    const [status,setStatus] =useState("")
-    const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState({ type: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = ((e) => {
-        e.preventDefault();
-        
-    api.post("/auth/forgot-password", { "email": email })
-        .then((response) => {
-            console.log(response.data);
-            if(response.data == true){
-                setStatus("Sending Email ...")
-                setTimeout(() => {
-    setStatus("Check your Email!")
-    setEmail("");
-}, 30000); 
-            }else{
-                setStatus("Account does not exist")
-                setEmail("")
-            }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus({ type: "", message: "" });
+    setIsSubmitting(true);
 
-        })
-        .catch((error) => {
-            console.error(error);
+    try {
+      const response = await api.post("/auth/forgot-password", { email });
+
+      // Handle boolean or object responses
+      if (response.data === true || response.data?.success) {
+        setStatus({
+          type: "success",
+          message: "Reset link sent! Please check your email inbox.",
         });
-});
-    
-    
+        setEmail("");
+      } else {
+        setStatus({
+          type: "error",
+          message: "No account found associated with this email address.",
+        });
+      }
+    } catch (error) {
+      console.error("Forgot password request failed:", error);
+      setStatus({
+        type: "error",
+        message: error.response?.data?.message || "Failed to process request. Please try again later.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <>
-    <GlobalNav/>
-    <div className='flex flex-col p-5 items-center'>
-    <div className='flex flex-col justify-around w-full 2xl:max-w-[600px] items-center m-5 bg-gray-100 rounded-2xl p-5 h-fit'>
-        <div className='bg-orange-500 w-65 text-center p-2 rounded-2xl'>
-            <h2 className='font-semibold'>Password Reset</h2>
+    <div className="flex min-h-screen flex-col bg-gray-950 text-gray-100">
+      <GlobalNav />
+
+      <main className="mx-auto flex w-full max-w-7xl flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md rounded-2xl border border-gray-800 bg-gray-900 p-8 shadow-2xl">
+          
+          {/* Header */}
+          <div className="text-center">
+            <h1 className="text-xl font-bold tracking-tight text-white">
+              Forgot Your Password?
+            </h1>
+            <p className="mt-1.5 text-xs text-gray-400">
+              Enter your registered email address below and we'll send you a link to reset your password.
+            </p>
+          </div>
+
+          {/* Status Feedback Alerts */}
+          {status.message && (
+            <div
+              className={`mt-6 rounded-xl border p-3 text-center text-xs font-medium ${
+                status.type === "success"
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                  : "border-red-500/30 bg-red-500/10 text-red-400"
+              }`}
+            >
+              {status.message}
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-xs font-medium text-gray-300">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                required
+                className="mt-1.5 w-full rounded-xl border border-gray-800 bg-gray-950 px-4 py-2.5 text-sm text-white placeholder-gray-600 transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full rounded-xl bg-blue-600 py-3 text-xs font-semibold text-white transition-all hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            >
+              {isSubmitting ? "Sending Reset Link..." : "Send Reset Link"}
+            </button>
+          </form>
+
+          {/* Navigation Links */}
+          <div className="mt-6 border-t border-gray-800 pt-4 text-center">
+            <Link
+              to="/login"
+              className="text-xs font-semibold text-blue-400 transition-colors hover:text-blue-300"
+            >
+              ← Back to Sign In
+            </Link>
+          </div>
+
         </div>
-    
-    <form className='flex flex-col mt-3 w-fit text-center'>
-        <p className='text-gray-400 mt-2'>Enter your Email below</p>
-        <input type="email" name="email"  value={email}
-  onChange={(e) => setEmail(e.target.value)} className='border-1 hover:outline-orange-500 w-65 p-2  mt-2 rounded-2xl font-semibold text-center' placeholder='johndoe@gmail.com'/>
-        <br />
-        <button className='border-2 p-2 rounded-2xl w-full bg-orange-500 text-white font-semibold hover:scale-102' onClick={handleSubmit}>Submit</button>
-    </form>
-    <p className='text-red-500'>{status}</p>
+      </main>
+
+      <Footer />
     </div>
-    </div>
-    </>
-    
-  )
+  );
 }

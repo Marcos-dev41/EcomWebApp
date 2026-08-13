@@ -29,6 +29,14 @@ function addToCart(prodId){
   })
 }
 
+const updateQuantity = (prodId, newQuantity) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.prodId === prodId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
 function removeFromCart(prodId){
   setCart((prevCart) => prevCart.filter((item) => item.prodId !== prodId));
 }
