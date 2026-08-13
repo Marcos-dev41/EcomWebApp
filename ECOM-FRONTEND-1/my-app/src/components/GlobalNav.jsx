@@ -7,12 +7,15 @@ import store from '../../src/assets/store.png'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../pages/CartContext'
+import AccountSettings from './AccountSettings'
 
 
 export default function 
 () {
    const {cart} = useCart();
     const jwtToken = localStorage.getItem("token")
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    
         const expiryDate = (() => {
   if (!jwtToken) return null;
 
@@ -37,15 +40,32 @@ export default function
 
   // function to handle user logging out
 
-    function logout(){
-        localStorage.removeItem("token");
+   
+   function logout(){
+    // 1. Clear stored credentials
+    localStorage.removeItem("token");
+
+    // 2. Define routes that require authentication
+    const protectedRoutes = ['/cart', '/notifications', '/checkout/:orderId'];
+
+    // 3. If on a protected page, kick to login; otherwise reload or stay put
+    const isProtected = protectedRoutes.some((route) =>
+      location.pathname.startsWith(route)
+    );
+
+    if (isProtected) {
+      navigate('/login', { replace: true });
+    } else {
+      // Force a soft state update or refresh so public headers update immediately
+      window.location.reload(); 
     }
+  };
 
    const [isOpen, setIsOpen] = useState(false);
    const isAuthenticated = jwtToken && expiryDate() >= currentTime;
 
 
-  return (
+  return (<>
     <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-gray-900/95 text-gray-100 backdrop-blur-md shadow-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         
@@ -116,10 +136,19 @@ export default function
 
               {isOpen && (
                 <div className="absolute right-0 z-50 mt-2 w-48 rounded-md border border-gray-800 bg-gray-900 py-1 text-sm text-gray-300 shadow-xl">
-                  <a href="#settings" className="block px-4 py-2 hover:bg-gray-800 hover:text-white">
-                    Account settings
-                  </a>
-                  <a href="#support" className="block px-4 py-2 hover:bg-gray-800 hover:text-white">
+                  <button onClick={() => {
+                  setIsSettingsOpen(true); // Opens Modal
+                  setIsDropdownOpen(false); // Closes Dropdown
+                }}
+                      href="#settings"
+                      className="block px-4 py-2 hover:bg-gray-800 hover:text-white"
+                    >
+                      Account settings
+                    </button>
+                  <a  href="https://mail.google.com/mail/?view=cm&fs=1&to=support@monimart.com&su=MoniMart%20Support%20Request"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                     className="block px-4 py-2 hover:bg-gray-800 hover:text-white">
                     Support
                   </a>
                   <hr className="my-1 border-gray-800" />
@@ -144,6 +173,12 @@ export default function
 
       </div>
     </header>
+
+    <AccountSettings
+                          isOpen={isSettingsOpen}
+                          onClose={() => setIsSettingsOpen(false)}
+     />
+     </>
   );
 }
   

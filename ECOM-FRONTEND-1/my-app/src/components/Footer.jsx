@@ -53,16 +53,6 @@ export default function Footer() {
                     All Products
                   </Link>
                 </li>
-                <li>
-                  <Link to="/categories" className="transition-colors hover:text-white">
-                    Featured
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/deals" className="transition-colors hover:text-white">
-                    Special Offers
-                  </Link>
-                </li>
               </ul>
             </div>
 
@@ -81,12 +71,7 @@ export default function Footer() {
                   <Link to="/contact" className="transition-colors hover:text-white">
                     Contact us
                   </Link>
-                </li>
-                <li>
-                  <Link to="/careers" className="transition-colors hover:text-white">
-                    Careers
-                  </Link>
-                </li>
+                </li> 
               </ul>
             </div>
 
@@ -97,17 +82,12 @@ export default function Footer() {
               </h3>
               <ul className="mt-4 space-y-2.5 text-sm">
                 <li>
-                  <Link to="/returns" className="transition-colors hover:text-white">
-                    Return policy
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/privacy" className="transition-colors hover:text-white">
+                  <Link to="#" className="transition-colors hover:text-white">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link to="/terms" className="transition-colors hover:text-white">
+                  <Link to="#" className="transition-colors hover:text-white">
                     Terms of Service
                   </Link>
                 </li>

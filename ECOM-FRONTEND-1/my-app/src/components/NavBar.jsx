@@ -8,6 +8,7 @@ import bell from '../../src/assets/notification.png'
 import { Link } from 'react-router-dom'
 import { useCart } from '../pages/CartContext'
 import ProductList from '../pages/ProductPage'
+import AccountSettings from './AccountSettings';
 
 export default function NavBar({search , setSearch}) {
     const {cart} = useCart();
@@ -15,6 +16,7 @@ export default function NavBar({search , setSearch}) {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
     const jwtToken = localStorage.getItem("token")
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
 // fixed login state issue 
     const expiryDate = (() => {
@@ -180,14 +182,19 @@ export default function NavBar({search , setSearch}) {
 
                 {isOpen && (
                   <div className="absolute right-0 z-50 mt-2 w-48 rounded-md border border-gray-800 bg-gray-900 py-1 text-sm text-gray-300 shadow-xl">
-                    <a
+                    <button onClick={() => {
+                  setIsSettingsOpen(true); // Opens Modal
+                  setIsDropdownOpen(false); // Closes Dropdown
+                }}
                       href="#settings"
                       className="block px-4 py-2 hover:bg-gray-800 hover:text-white"
                     >
                       Account settings
-                    </a>
+                    </button>
                     <a
-                      href="#support"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=support@monimart.com&su=MoniMart%20Support%20Request"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="block px-4 py-2 hover:bg-gray-800 hover:text-white"
                     >
                       Support
@@ -215,6 +222,10 @@ export default function NavBar({search , setSearch}) {
       </div>
     </header>
 
+<AccountSettings
+                      isOpen={isSettingsOpen}
+                      onClose={() => setIsSettingsOpen(false)}
+ />
 
 
   <div className="bg-gray-900 p-4 flex m-0 justify-center border-b border-gray-800">
