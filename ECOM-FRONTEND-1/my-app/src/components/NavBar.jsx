@@ -98,13 +98,6 @@ export default function NavBar({search , setSearch}) {
             Contact us
             <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-500 transition-all duration-200 group-hover:w-full" />
           </Link>
-          <Link
-            to="/returns"
-            className="group relative py-1 transition-colors hover:text-blue-400"
-          >
-            Return policy
-            <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-blue-500 transition-all duration-200 group-hover:w-full" />
-          </Link>
         </nav>
 
         {/* Actions Section (Notifications, Cart, Profile) */}
