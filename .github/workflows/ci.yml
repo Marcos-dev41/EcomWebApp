@@ -10,10 +10,10 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      DATABASE_HOST:localhost
-      DATABASE_PORT:5432
-      DATABASE_USERNAME:postgres
-      DB_PASSWORD:0100276540Krams
+      DATABASE_HOST: localhost
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: postgres
+      DB_PASSWORD: 0100276540Krams
       MAIL_HOST: ${{ secrets.MAIL_HOST }}
       MAIL_PORT: ${{ secrets.MAIL_PORT }}
       MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
