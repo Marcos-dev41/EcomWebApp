@@ -259,7 +259,6 @@ export default function NavBar({search , setSearch}) {
     )}
   </div>
 </div>
-    </>
-
+</>
   )}
 
