@@ -70,4 +70,4 @@ jobs:
         with:
           context: ./ECOM-BACKEND-1/web
           push: true
-          tags: ghcr.io/marcos_dev41/monimart-monolith:latest
+          tags: ghcr.io/${{ github.repository_owner }}/monimart-monolith:latest
