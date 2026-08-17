@@ -9,6 +9,22 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      MAIL_HOST: ${{ secrets.MAIL_HOST }}
+      MAIL_PORT: ${{ secrets.MAIL_PORT }}
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
+      CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+      CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
+      BUSINESS_SHORTCODE: ${{ secrets.BUSINESS_SHORTCODE }}
+      PASS_KEY: ${{ secrets.PASS_KEY }}
+      CALLBACK_URL: ${{ secrets.CALLBACK_URL }}
+      PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID }}
+      PAYPAL_CLIENT_SECRET: ${{ secrets.PAYPAL_CLIENT_SECRET }}
+      AMP_USERNAME: ${{ secrets.AMP_USERNAME }}
+      AMP_PASSWORD: ${{ secrets.AMP_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -34,25 +50,3 @@ jobs:
           context: ./ECOM-BACKEND-1/web
           push: true
           tags: ghcr.io/marcos_dev41/monimart-monolith:latest
-          
-      - name: Build and test monolith
-        env:
-          MAIL_HOST: ${{ secrets.MAIL_HOST }}
-          MAIL_PORT: ${{ secrets.MAIL_PORT }}
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
-          CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
-          CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
-          BUSINESS_SHORTCODE: ${{ secrets.BUSINESS_SHORTCODE }}
-          PASS_KEY: ${{ secrets.PASS_KEY }}
-          CALLBACK_URL: ${{ secrets.CALLBACK_URL }}
-          PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID }}
-          PAYPAL_CLIENT_SECRET: ${{ secrets.PAYPAL_CLIENT_SECRET }}
-          AMP_USERNAME: ${{ secrets.AMP_USERNAME }}
-          AMP_PASSWORD: ${{ secrets.AMP_PASSWORD }}
-          SPRING_RABBITMQ_HOST: localhost
-          RABBITMQ_USER: guest
-          RABBITMQ_PASS: guest
-        run: mvn clean verify        
