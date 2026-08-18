@@ -27,6 +27,15 @@ export default function CheckoutPage() {
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+
+  const formatPhone = (phone) => {
+  let cleaned = String(phone).replace(/\D/g, ''); // strip non-digits (spaces, +, dashes)
+
+  if (cleaned.length === 9) {
+    return '254' + cleaned;
+  }
+};
+
   // Helper to handle shipping form input changes
   const handleShippingChange = (e) => {
     const { name, value } = e.target;
@@ -38,11 +47,10 @@ export default function CheckoutPage() {
     e.preventDefault();
     setIsSubmitting(true);
     setStatus("Sending M-Pesa STK push request...");
-
     try {
       await api.post(`/checkout/pay`, { 
         orderId, 
-        phoneNumber,
+        phoneNumber:formatPhone(phoneNumber),
         
         shippingInfo 
       });
@@ -254,15 +262,18 @@ export default function CheckoutPage() {
                       <label className="block text-xs font-medium text-gray-400 mb-1">
                         M-Pesa Phone Number
                       </label>
+                      <div className='flex flex-row items-center justify-between gap-3'>
+                      <div className='text-center rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white '><p>+254</p></div>
                       <input
                         type="tel"
-                        placeholder="2547XXXXXXXX"
+                        placeholder="7XXXXXXXX"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
-                        maxLength={12}
+                        maxLength={9}
                         required
                         className="w-full rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                       />
+                      </div>
                     </div>
                     <button
                       type="submit"

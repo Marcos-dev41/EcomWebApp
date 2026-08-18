@@ -12,6 +12,7 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState('mpesa');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [alert,setAlert] = useState(false);
 
   const navigate = useNavigate();
 
@@ -39,8 +40,6 @@ export default function CartPage() {
     try {
       setIsSubmitting(true);
       const response = await api.post("/payment/checkout", cartWithDetails);
-      console.log(cartWithDetails)
-    
       const order = response.data;
       clearCart(); 
       navigate(`/checkout/${order.orderId}`, {
@@ -48,6 +47,7 @@ export default function CartPage() {
       });
     } catch (error) {
       console.error("Checkout Failed", error);
+      setAlert(true)
     } finally {
       setIsSubmitting(false);
     }
@@ -192,8 +192,34 @@ export default function CartPage() {
               </button>
             </div>
 
-          </div>
+          </div>          
         )}
+
+       { alert === true ?
+        <div className="flex items-center justify-between mt-4 rounded-lg border border-amber-200/60 bg-amber-50/80 px-4 py-3 text-amber-900 shadow-sm backdrop-blur-sm">
+      <div className="flex items-center gap-3">
+        <svg 
+          className="h-5 w-5 text-amber-600 shrink-0" 
+          viewBox="0 0 20 20" 
+          fill="currentColor"
+        >
+          <path 
+            fillRule="evenodd" 
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" 
+            clipRule="evenodd" 
+          />
+        </svg>
+        <span className="text-sm font-medium">
+          You are not logged in. Please sign in to access your account.
+        </span>
+      </div>
+      <a 
+        href="/login" 
+        className="ml-4 shrink-0 rounded-md bg-amber-100 px-3 py-1.5 text-xs font-semibold text-amber-800 transition-colors hover:bg-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1"
+      >
+        Log In
+      </a>
+    </div> : <div className='hidden'></div>}
       </main>
 
       <Footer />
