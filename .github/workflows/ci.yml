@@ -15,7 +15,7 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ${{secrets.DB_PASSWORD}}
+          POSTGRES_PASSWORD: 0100276540Krams
           POSTGRES_DB: ecom_db
         options: >-
           --health-cmd pg_isready
