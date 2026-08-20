@@ -58,7 +58,6 @@ export default function NavBar({search , setSearch}) {
     if (isProtected) {
       navigate('/login', { replace: true });
     } else {
-      // Force a soft state update or refresh so public headers update immediately
       window.location.reload(); 
     }
   };

@@ -1,5 +1,6 @@
 package com.ecom.web.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
@@ -18,8 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 
-public class Product {
-    
+public class Product implements Serializable {
     @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer prodId;

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -12,6 +13,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @SpringBootApplication
 @EnableAsync
+@EnableCaching
 @ComponentScan(basePackages = {"com.ecom.web", "com.ecom.web.Rabbitmq"})
 public class WebApplication {
 
