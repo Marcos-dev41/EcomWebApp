@@ -7,6 +7,7 @@ export default function Footer() {
     <footer className="w-full border-t border-gray-800 bg-gray-950 text-gray-400">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+          ,
           
           {/* Brand Info */}
           <div className="lg:col-span-2">
