@@ -45,7 +45,8 @@ jobs:
       PAYPAL_CLIENT_SECRET: ${{ secrets.PAYPAL_CLIENT_SECRET }}
       AMP_USERNAME: ${{ secrets.AMP_USERNAME }}
       AMP_PASSWORD: ${{ secrets.AMP_PASSWORD }}
-    
+      SPRING_DATA_REDIS_HOST: localhost
+      SPRING_DATA_REDIS_PORT: 6379
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
