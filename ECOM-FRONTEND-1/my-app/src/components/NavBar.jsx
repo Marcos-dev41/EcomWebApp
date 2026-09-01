@@ -73,11 +73,11 @@ export default function NavBar({search , setSearch}) {
         
         {/* Brand Logo & Name */}
         <Link to="/" className="flex items-center gap-3 transition-opacity hover:opacity-90">
-          <img
+          {/* <img
             src={logo}
             alt="MoniMart Logo"
             className="h-9 w-auto object-contain"
-          />
+          /> */}
           <span className="text-xl font-bold tracking-tight text-white">
             MoniMart
           </span>
