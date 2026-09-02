@@ -59,7 +59,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-    configuration.setAllowedOrigins(List.of("https://aee10754.ecomwebapp.pages.dev"));
+    configuration.setAllowedOrigins(List.of("https://26067a01.ecomwebapp.pages.dev"));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
