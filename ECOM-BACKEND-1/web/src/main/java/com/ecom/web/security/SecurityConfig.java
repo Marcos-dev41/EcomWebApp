@@ -38,6 +38,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/error").permitAll()
             .requestMatchers("/api/checkout/pay").permitAll()
             .requestMatchers("/api/api/paypal/create-order").permitAll()
             .requestMatchers("/api/payments/callback").permitAll()
@@ -59,7 +60,6 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-    configuration.setAllowedOrigins(List.of("https://fd9abc0e.ecomwebapp.pages.dev"));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
