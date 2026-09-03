@@ -46,7 +46,7 @@ function clearCart() {
 }
 
   return(
-    <CartContext.Provider value={{cart, addToCart,clearCart, removeFromCart}}>
+    <CartContext.Provider value={{cart, addToCart,clearCart,updateQuantity, removeFromCart}}>
       {children}
     </CartContext.Provider>
   );

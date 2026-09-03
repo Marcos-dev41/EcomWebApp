@@ -74,9 +74,18 @@ export default function ProductComp({ product, onSelect }) {
         <div className="mt-4 flex items-center justify-between">
           <div>
             <p className="text-xs text-gray-500">Price</p>
-            <p className="text-base font-bold text-white">
+          {product.discount ? <> 
+            <p className="text-xs line-through text-white">
+              Ksh {Number(product.price).toLocaleString()}
+            </p> 
+              <p className="text-base font-bold text-white">
+              Ksh {Number(product.price - ((product.price*product.discount)/100)).toLocaleString()}
+            </p>
+            </>:
+             <p className="text-base font-bold text-white">
               Ksh {Number(product.price).toLocaleString()}
             </p>
+}
           </div>
 
           <div className="text-right">

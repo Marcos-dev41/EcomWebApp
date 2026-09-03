@@ -11,6 +11,7 @@ import NewPasswordPage from './pages/NewPasswordPage';
 import CheckoutPage from './pages/Checkout';
 import NotificationsPage from './pages/NotificationsPage';
 import CartProvider  from './pages/CartContext'; 
+import OurStory from './pages/OurStory';
 
 const clientId=import.meta.env.VITE_PAYPAL_CLIENT_ID;
 // paypal configs
@@ -30,6 +31,7 @@ function App() {
             <Route path="/products" element={<ProductList />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/ourstory" element={<OurStory />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/passresetpage" element={<PassResetPage />} />
             <Route path="/newpassword" element={<NewPasswordPage />} />
