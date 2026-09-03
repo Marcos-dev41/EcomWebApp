@@ -32,6 +32,8 @@ public boolean accountExistsChecker(String email){
    resetToken.setExpiresAt(LocalDateTime.now().plusMinutes(30));
    passwordResetTokenRepo.save(resetToken); 
 
+  //  requires reconfiguring for prod
+
    String resetLink = "http://localhost:5173/newpassword?token=" + token;
        if(emailExists)  emailService.sendResetPasswordMail(email,resetLink);
      return emailExists;
