@@ -1,10 +1,13 @@
 package com.ecom.web.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +32,14 @@ public List<Order> getMyOrders() {
     User user = loginRepo.findByEmail(email).orElseThrow();
     return orderRepo.findByUser_UserId(user.getUserId());
     
+}
+
+@GetMapping("/status/{correlationId}")
+public ResponseEntity<Map<String, String>> getOrderStatus(@PathVariable String correlationId) {
+    Order order = orderRepo.findByCorrelationId(correlationId).orElse(null);
+    if (order == null) {
+        return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(Map.of("status", order.getOrderStatus()));
 }
 }

@@ -41,7 +41,6 @@ public class CheckoutController {
 
         String correlationId = UUID.randomUUID().toString();
 
-    
         //  Here I  setup the json body going to my broker -> payment microservice
         
         PaymentRequestDto dto = new PaymentRequestDto();

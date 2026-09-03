@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useSearchParams, useLocation } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import GlobalNav from '../components/GlobalNav';
 import Footer from '../components/Footer';
@@ -8,6 +8,8 @@ import api from '../axioxInstance';
 export default function CheckoutPage() {
   const { orderId } = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [paymentFailed, setPaymentFailed] = useState(false);
   const location = useLocation();
 
   // Read initial payment method from route state or query param
@@ -27,14 +29,13 @@ export default function CheckoutPage() {
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
   const formatPhone = (phone) => {
-  let cleaned = String(phone).replace(/\D/g, ''); // strip non-digits (spaces, +, dashes)
+    let cleaned = String(phone).replace(/\D/g, ''); // strip non-digits (spaces, +, dashes)
 
-  if (cleaned.length === 9) {
-    return '254' + cleaned;
-  }
-};
+    if (cleaned.length === 9) {
+      return '254' + cleaned;
+    }
+  };
 
   // Helper to handle shipping form input changes
   const handleShippingChange = (e) => {
@@ -42,22 +43,63 @@ export default function CheckoutPage() {
     setShippingInfo((prev) => ({ ...prev, [name]: value }));
   };
 
+  // --- POLLING HELPER ---
+  async function pollPaymentStatus(correlationId, { intervalMs = 3000, timeoutMs = 60000 } = {}) {
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeoutMs) {
+      try {
+        const res = await api.get(`/order/status/${correlationId}`);
+        const { status } = res.data;
+
+        if (status === "SUCCESS") return "SUCCESS";
+        if (status === "FAILED") return "FAILED";
+        // else PENDING — keep polling
+      } catch (err) {
+        console.error("Status poll failed", err);
+      }
+      await new Promise((resolve) => setTimeout(resolve, intervalMs));
+    }
+    return "TIMEOUT";
+  }
+
   // --- M-PESA HANDLER ---
   async function handleMpesaPayment(e) {
     e.preventDefault();
     setIsSubmitting(true);
+    setPaymentFailed(false);
     setStatus("Sending M-Pesa STK push request...");
+
     try {
-      await api.post(`/checkout/pay`, { 
-        orderId, 
-        phoneNumber:formatPhone(phoneNumber),
-        
-        shippingInfo 
+      const response = await api.post(`/checkout/pay`, {
+        orderId,
+        phoneNumber: formatPhone(phoneNumber),
+        shippingInfo,
       });
-      setStatus("Check your phone to complete the M-Pesa payment.");
+
+      const { correlationId } = response.data;
+
+      if (!correlationId) {
+        setStatus("Payment could not be initiated.");
+        setPaymentFailed(true);
+        setIsSubmitting(false);
+        return;
+      }
+
+      setStatus("Check your phone to complete the M-Pesa payment...");
+      const result = await pollPaymentStatus(correlationId);
+
+      if (result === "SUCCESS") {
+        setStatus("Payment successful! Redirecting...");
+        navigate("/order-confirmation");
+      } else {
+        setStatus(result === "TIMEOUT" ? "Payment timed out." : "Payment failed.");
+        setPaymentFailed(true);
+      }
     } catch (error) {
       console.error("STK push failed", error);
       setStatus("Something went wrong with the M-Pesa payment.");
+      setPaymentFailed(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -69,9 +111,9 @@ export default function CheckoutPage() {
     setStatus("Redirecting to PesaPal gateway...");
 
     try {
-      const response = await api.post(`/pesapal/initiate`, { 
-        orderId, 
-        shippingInfo 
+      const response = await api.post(`/pesapal/initiate`, {
+        orderId,
+        shippingInfo
       });
       if (response.data.redirectUrl) {
         window.location.href = response.data.redirectUrl;
@@ -90,9 +132,9 @@ export default function CheckoutPage() {
   const handleCreatePayPalOrder = async () => {
     setStatus("Initializing PayPal transaction...");
     try {
-      const response = await api.post(`/paypal/create-order`, { 
-        orderId, 
-        shippingInfo 
+      const response = await api.post(`/paypal/create-order`, {
+        orderId,
+        shippingInfo
       });
       return response.data.id;
     } catch (error) {
@@ -131,7 +173,7 @@ export default function CheckoutPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-          
+
           {/* SECTION 1: SHIPPING INFORMATION */}
           <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6 shadow-xl">
             <h2 className="text-base font-semibold text-white border-b border-gray-800 pb-3">
@@ -217,7 +259,7 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
-                    onClick={() => { setSelectedMethod('mpesa'); setStatus(''); }}
+                    onClick={() => { setSelectedMethod('mpesa'); setStatus(''); setPaymentFailed(false); }}
                     className={`rounded-xl border py-2 text-xs font-semibold transition-all ${
                       selectedMethod === 'mpesa'
                         ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
@@ -229,7 +271,7 @@ export default function CheckoutPage() {
 
                   <button
                     type="button"
-                    onClick={() => { setSelectedMethod('pesapal'); setStatus(''); }}
+                    onClick={() => { setSelectedMethod('pesapal'); setStatus(''); setPaymentFailed(false); }}
                     className={`rounded-xl border py-2 text-xs font-semibold transition-all ${
                       selectedMethod === 'pesapal'
                         ? 'border-blue-500 bg-blue-500/10 text-blue-400'
@@ -241,7 +283,7 @@ export default function CheckoutPage() {
 
                   <button
                     type="button"
-                    onClick={() => { setSelectedMethod('paypal'); setStatus(''); }}
+                    onClick={() => { setSelectedMethod('paypal'); setStatus(''); setPaymentFailed(false); }}
                     className={`rounded-xl border py-2 text-xs font-semibold transition-all ${
                       selectedMethod === 'paypal'
                         ? 'border-indigo-500 bg-indigo-500/10 text-indigo-400'
@@ -263,16 +305,16 @@ export default function CheckoutPage() {
                         M-Pesa Phone Number
                       </label>
                       <div className='flex flex-row items-center justify-between gap-3'>
-                      <div className='text-center rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white '><p>+254</p></div>
-                      <input
-                        type="tel"
-                        placeholder="7XXXXXXXX"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        maxLength={9}
-                        required
-                        className="w-full rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                      />
+                        <div className='text-center rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white '><p>+254</p></div>
+                        <input
+                          type="tel"
+                          placeholder="7XXXXXXXX"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          maxLength={9}
+                          required
+                          className="w-full rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                        />
                       </div>
                     </div>
                     <button
@@ -323,6 +365,15 @@ export default function CheckoutPage() {
             {status && (
               <div className="mt-6 rounded-xl border border-gray-800 bg-gray-950 p-3 text-center text-xs font-medium text-gray-300">
                 {status}
+                {paymentFailed && (
+                  <button
+                    type="button"
+                    onClick={handleMpesaPayment}
+                    className="mt-3 block w-full rounded-xl bg-emerald-600 py-2 text-xs font-semibold text-white hover:bg-emerald-500"
+                  >
+                    Retry Payment
+                  </button>
+                )}
               </div>
             )}
           </div>
