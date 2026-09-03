@@ -4,8 +4,8 @@ import api from '../axioxInstance';
 
 export default function AccountSettingsModal({ isOpen, onClose }) {
   // Profile Form State
-  const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState('');
+  const [phoneNumber, setphoneNumber] = useState('');
 
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,7 +18,7 @@ export default function AccountSettingsModal({ isOpen, onClose }) {
     setIsSubmitting(true);
 
     try {
-      await api.put('/user/profile', { fullName, phone });
+      await api.put('/user/user-details', { name, phoneNumber });
       setStatus({ type: 'success', message: 'Profile updated successfully!' });
     } catch (err) {
       console.error(err);
@@ -87,21 +87,21 @@ export default function AccountSettingsModal({ isOpen, onClose }) {
               <input
                 type="text"
                 placeholder="John Doe"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:border-blue-500 focus:outline-none"
               />
             </div>
 
             <div>
               <label className="block text-xs font-medium text-gray-400 mb-1">
-                Phone Number
+                phoneNumber
               </label>
               <input
                 type="tel"
                 placeholder="2547XXXXXXXX"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={phoneNumber}
+                onChange={(e) => setphoneNumber(e.target.value)}
                 className="w-full rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:border-blue-500 focus:outline-none"
               />
             </div>
