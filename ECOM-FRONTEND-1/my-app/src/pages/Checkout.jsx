@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import GlobalNav from '../components/GlobalNav';
@@ -24,17 +24,38 @@ export default function CheckoutPage() {
     city: "",
     postalCode: "",
   });
+  const [shippingErrors, setShippingErrors] = useState({});
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const formatPhone = (phone) => {
-    let cleaned = String(phone).replace(/\D/g, ''); // strip non-digits (spaces, +, dashes)
+  // Guards against setting state / navigating after unmount or after
+  // the user has switched away from the in-flight payment method.
+  const activePollId = useRef(0);
+  const isMountedRef = useRef(true);
 
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      console.log("[CheckoutPage] unmounting");
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  const formatPhone = (phone) => {
+    let cleaned = String(phone).replace(/\D/g, ''); // strip non-digits
+
+    if (cleaned.startsWith('254') && cleaned.length === 12) {
+      return cleaned;
+    }
+    if (cleaned.startsWith('0') && cleaned.length === 10) {
+      return '254' + cleaned.substring(1);
+    }
     if (cleaned.length === 9) {
       return '254' + cleaned;
     }
+    return null;
   };
 
   // Helper to handle shipping form input changes
@@ -43,29 +64,96 @@ export default function CheckoutPage() {
     setShippingInfo((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Validates required shipping fields before any payment can proceed.
+  // Returns true if valid, false (and populates shippingErrors) if not.
+  const validateShipping = () => {
+    const errors = {};
+    if (!shippingInfo.fullName.trim()) errors.fullName = "Full name is required.";
+    if (!shippingInfo.streetAddress.trim()) errors.streetAddress = "Street address is required.";
+    if (!shippingInfo.city.trim()) errors.city = "City/town is required.";
+    // postalCode is optional, matching the original form
+
+    setShippingErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      console.log("[validateShipping] failed", errors);
+      setStatus("Please fill in your shipping details before paying.");
+      setPaymentFailed(true);
+      return false;
+    }
+    return true;
+  };
+
+  // Prevent the shipping form's native submit behavior (e.g. pressing
+  // Enter in a field) from reloading the page.
+  const handleShippingFormSubmit = (e) => {
+    e.preventDefault();
+  };
+
   // --- POLLING HELPER ---
-  async function pollPaymentStatus(correlationId, { intervalMs = 3000, timeoutMs = 60000 } = {}) {
+  // pollId lets a stale poll (from a payment method the user has since
+  // abandoned) recognize it's stale and stop touching state.
+  // NOTE: backend sends "PENDING" | "PAID" | "FAILED" — mapped to
+  // this function's own SUCCESS/FAILED/TIMEOUT/CANCELLED vocabulary.
+  async function pollPaymentStatus(correlationId, pollId, { intervalMs = 3000, timeoutMs = 60000 } = {}) {
+    console.log("[pollPaymentStatus] started", { correlationId, pollId });
     const startTime = Date.now();
+    let tick = 0;
 
     while (Date.now() - startTime < timeoutMs) {
+      tick++;
+      console.log("[pollPaymentStatus] tick", tick, {
+        isMounted: isMountedRef.current,
+        activePollId: activePollId.current,
+        pollId,
+      });
+
+      if (!isMountedRef.current || activePollId.current !== pollId) {
+        console.log("[pollPaymentStatus] cancelled — mismatch or unmounted");
+        return "CANCELLED";
+      }
+
       try {
         const res = await api.get(`/order/status/${correlationId}`);
+        console.log("[pollPaymentStatus] response", res.data);
         const { status } = res.data;
 
-        if (status === "SUCCESS") return "SUCCESS";
+        if (status === "PAID") return "SUCCESS";
         if (status === "FAILED") return "FAILED";
         // else PENDING — keep polling
       } catch (err) {
-        console.error("Status poll failed", err);
+        console.error("[pollPaymentStatus] request failed", err.response?.status, err.response?.data || err.message);
       }
       await new Promise((resolve) => setTimeout(resolve, intervalMs));
     }
+    console.log("[pollPaymentStatus] timed out");
     return "TIMEOUT";
   }
 
   // --- M-PESA HANDLER ---
   async function handleMpesaPayment(e) {
-    e.preventDefault();
+    if (e?.preventDefault) {
+      e.preventDefault();
+    }
+
+    console.log("[handleMpesaPayment] fired");
+
+    if (!validateShipping()) {
+      console.log("[handleMpesaPayment] blocked by shipping validation");
+      return;
+    }
+
+    const formattedPhone = formatPhone(phoneNumber);
+    if (!formattedPhone) {
+      console.log("[handleMpesaPayment] blocked by invalid phone", phoneNumber);
+      setStatus("Please enter a valid phone number (e.g. 7XXXXXXXX).");
+      setPaymentFailed(true);
+      return;
+    }
+
+    const pollId = ++activePollId.current;
+    console.log("[handleMpesaPayment] pollId assigned", pollId);
+
     setIsSubmitting(true);
     setPaymentFailed(false);
     setStatus("Sending M-Pesa STK push request...");
@@ -73,40 +161,66 @@ export default function CheckoutPage() {
     try {
       const response = await api.post(`/checkout/pay`, {
         orderId,
-        phoneNumber: formatPhone(phoneNumber),
+        phoneNumber: formattedPhone,
         shippingInfo,
       });
+
+      console.log("[handleMpesaPayment] /checkout/pay response", response.data);
 
       const { correlationId } = response.data;
 
       if (!correlationId) {
-        setStatus("Payment could not be initiated.");
-        setPaymentFailed(true);
-        setIsSubmitting(false);
+        console.log("[handleMpesaPayment] no correlationId in response — aborting before poll");
+        if (isMountedRef.current && activePollId.current === pollId) {
+          setStatus("Payment could not be initiated.");
+          setPaymentFailed(true);
+          setIsSubmitting(false);
+        }
         return;
       }
 
-      setStatus("Check your phone to complete the M-Pesa payment...");
-      const result = await pollPaymentStatus(correlationId);
+      if (isMountedRef.current && activePollId.current === pollId) {
+        setStatus("Check your phone to complete the M-Pesa payment...");
+      }
+
+      console.log("[handleMpesaPayment] about to poll", { correlationId, pollId, activePollId: activePollId.current });
+
+      const result = await pollPaymentStatus(correlationId, pollId);
+
+      console.log("[handleMpesaPayment] poll result", result);
+
+      // Stale poll (unmounted, or user switched payment method) — do nothing.
+      if (!isMountedRef.current || activePollId.current !== pollId) {
+        console.log("[handleMpesaPayment] result discarded — stale/unmounted");
+        return;
+      }
 
       if (result === "SUCCESS") {
         setStatus("Payment successful! Redirecting...");
-        navigate("/order-confirmation");
+        navigate("/notifications");
+      } else if (result === "CANCELLED") {
+        // no-op, another action superseded this one
       } else {
         setStatus(result === "TIMEOUT" ? "Payment timed out." : "Payment failed.");
         setPaymentFailed(true);
       }
     } catch (error) {
-      console.error("STK push failed", error);
-      setStatus("Something went wrong with the M-Pesa payment.");
-      setPaymentFailed(true);
+      console.error("[handleMpesaPayment] STK push request threw", error);
+      if (isMountedRef.current && activePollId.current === pollId) {
+        setStatus("Something went wrong with the M-Pesa payment.");
+        setPaymentFailed(true);
+      }
     } finally {
-      setIsSubmitting(false);
+      if (isMountedRef.current && activePollId.current === pollId) {
+        setIsSubmitting(false);
+      }
     }
   }
 
   // --- PESAPAL HANDLER ---
   async function handlePesapalPayment() {
+    if (!validateShipping()) return;
+
     setIsSubmitting(true);
     setStatus("Redirecting to PesaPal gateway...");
 
@@ -119,17 +233,26 @@ export default function CheckoutPage() {
         window.location.href = response.data.redirectUrl;
       } else {
         setStatus("Could not retrieve PesaPal checkout URL.");
+        setPaymentFailed(true);
       }
     } catch (error) {
       console.error("PesaPal initiation failed", error);
       setStatus("Error connecting to PesaPal gateway.");
+      setPaymentFailed(true);
     } finally {
-      setIsSubmitting(false);
+      if (isMountedRef.current) {
+        setIsSubmitting(false);
+      }
     }
   }
 
   // --- PAYPAL HANDLERS ---
   const handleCreatePayPalOrder = async () => {
+    if (!validateShipping()) {
+      // Throwing prevents the PayPal SDK from opening its popup.
+      throw new Error("Shipping information incomplete.");
+    }
+
     setStatus("Initializing PayPal transaction...");
     try {
       const response = await api.post(`/paypal/create-order`, {
@@ -140,6 +263,7 @@ export default function CheckoutPage() {
     } catch (error) {
       console.error("PayPal order creation failed", error);
       setStatus("Failed to create PayPal order.");
+      setPaymentFailed(true);
       throw error;
     }
   };
@@ -150,13 +274,26 @@ export default function CheckoutPage() {
       const response = await api.post(`/paypal/capture-order/${data.orderID}`);
       if (response.data.status === 'COMPLETED') {
         setStatus("Payment completed successfully! 🎉");
+        navigate("/order-confirmation");
       } else {
         setStatus("PayPal payment could not be finalized.");
+        setPaymentFailed(true);
       }
     } catch (error) {
       console.error("PayPal capture failed", error);
       setStatus("Error finalizing PayPal payment.");
+      setPaymentFailed(true);
     }
+  };
+
+  // Switching payment methods invalidates any in-flight M-Pesa poll.
+  const handleSelectMethod = (method) => {
+    if (isSubmitting) return; // don't allow switching mid-payment
+    console.log("[handleSelectMethod] switching to", method, "— bumping activePollId");
+    activePollId.current += 1; // invalidate any running poll
+    setSelectedMethod(method);
+    setStatus('');
+    setPaymentFailed(false);
   };
 
   return (
@@ -180,7 +317,7 @@ export default function CheckoutPage() {
               Shipping Address
             </h2>
 
-            <form className="mt-4 space-y-4">
+            <form className="mt-4 space-y-4" onSubmit={handleShippingFormSubmit}>
               <div>
                 <label className="block text-xs font-medium text-gray-400 mb-1">
                   Full Name
@@ -194,6 +331,9 @@ export default function CheckoutPage() {
                   required
                   className="w-full rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
+                {shippingErrors.fullName && (
+                  <p className="mt-1 text-[11px] text-red-400">{shippingErrors.fullName}</p>
+                )}
               </div>
 
               <div>
@@ -209,6 +349,9 @@ export default function CheckoutPage() {
                   required
                   className="w-full rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
+                {shippingErrors.streetAddress && (
+                  <p className="mt-1 text-[11px] text-red-400">{shippingErrors.streetAddress}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -225,6 +368,9 @@ export default function CheckoutPage() {
                     required
                     className="w-full rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
+                  {shippingErrors.city && (
+                    <p className="mt-1 text-[11px] text-red-400">{shippingErrors.city}</p>
+                  )}
                 </div>
 
                 <div>
@@ -259,8 +405,9 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
-                    onClick={() => { setSelectedMethod('mpesa'); setStatus(''); setPaymentFailed(false); }}
-                    className={`rounded-xl border py-2 text-xs font-semibold transition-all ${
+                    onClick={() => handleSelectMethod('mpesa')}
+                    disabled={isSubmitting}
+                    className={`rounded-xl border py-2 text-xs font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                       selectedMethod === 'mpesa'
                         ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
                         : 'border-gray-800 bg-gray-950/50 text-gray-400 hover:border-gray-700'
@@ -271,8 +418,9 @@ export default function CheckoutPage() {
 
                   <button
                     type="button"
-                    onClick={() => { setSelectedMethod('pesapal'); setStatus(''); setPaymentFailed(false); }}
-                    className={`rounded-xl border py-2 text-xs font-semibold transition-all ${
+                    onClick={() => handleSelectMethod('pesapal')}
+                    disabled={isSubmitting}
+                    className={`rounded-xl border py-2 text-xs font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                       selectedMethod === 'pesapal'
                         ? 'border-blue-500 bg-blue-500/10 text-blue-400'
                         : 'border-gray-800 bg-gray-950/50 text-gray-400 hover:border-gray-700'
@@ -283,8 +431,9 @@ export default function CheckoutPage() {
 
                   <button
                     type="button"
-                    onClick={() => { setSelectedMethod('paypal'); setStatus(''); setPaymentFailed(false); }}
-                    className={`rounded-xl border py-2 text-xs font-semibold transition-all ${
+                    onClick={() => handleSelectMethod('paypal')}
+                    disabled={isSubmitting}
+                    className={`rounded-xl border py-2 text-xs font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                       selectedMethod === 'paypal'
                         ? 'border-indigo-500 bg-indigo-500/10 text-indigo-400'
                         : 'border-gray-800 bg-gray-950/50 text-gray-400 hover:border-gray-700'
@@ -304,14 +453,16 @@ export default function CheckoutPage() {
                       <label className="block text-xs font-medium text-gray-400 mb-1">
                         M-Pesa Phone Number
                       </label>
-                      <div className='flex flex-row items-center justify-between gap-3'>
-                        <div className='text-center rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white '><p>+254</p></div>
+                      <div className="flex flex-row items-center justify-between gap-3">
+                        <div className="text-center rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white">
+                          <p>+254</p>
+                        </div>
                         <input
                           type="tel"
                           placeholder="7XXXXXXXX"
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value)}
-                          maxLength={9}
+                          maxLength={10}
                           required
                           className="w-full rounded-xl border border-gray-800 bg-gray-950 px-3.5 py-2.5 text-sm text-white placeholder-gray-600 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                         />
@@ -354,6 +505,7 @@ export default function CheckoutPage() {
                       onError={(err) => {
                         console.error("PayPal Error:", err);
                         setStatus("An error occurred processing PayPal.");
+                        setPaymentFailed(true);
                       }}
                     />
                   </div>
@@ -364,14 +516,15 @@ export default function CheckoutPage() {
             {/* Status Message Display */}
             {status && (
               <div className="mt-6 rounded-xl border border-gray-800 bg-gray-950 p-3 text-center text-xs font-medium text-gray-300">
-                {status}
-                {paymentFailed && (
+                <p>{status}</p>
+                {paymentFailed && selectedMethod === 'mpesa' && (
                   <button
                     type="button"
-                    onClick={handleMpesaPayment}
-                    className="mt-3 block w-full rounded-xl bg-emerald-600 py-2 text-xs font-semibold text-white hover:bg-emerald-500"
+                    disabled={isSubmitting}
+                    onClick={(e) => handleMpesaPayment(e)}
+                    className="mt-3 block w-full rounded-xl bg-emerald-600 py-2 text-xs font-semibold text-white transition-all hover:bg-emerald-500 disabled:opacity-50"
                   >
-                    Retry Payment
+                    {isSubmitting ? 'Retrying...' : 'Retry Payment'}
                   </button>
                 )}
               </div>

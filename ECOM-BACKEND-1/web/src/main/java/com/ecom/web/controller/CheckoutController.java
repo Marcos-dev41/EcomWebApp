@@ -64,7 +64,8 @@ public class CheckoutController {
 
         return ResponseEntity.accepted().body(Map.of(
                 "message", "Payment initiated",
-                "orderId", order.getOrderId()
+                "orderId", order.getOrderId(),
+                "correlationId", correlationId
         ));
     }
 }
