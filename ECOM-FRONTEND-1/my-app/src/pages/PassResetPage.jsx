@@ -31,11 +31,19 @@ export default function PassResetPage() {
         });
       }
     } catch (error) {
-      console.error("Forgot password request failed:", error);
-      setStatus({
-        type: "error",
-        message: error.response?.data?.message || "Failed to process request. Please try again later.",
-      });
+  console.error("Forgot password request failed:", error);
+
+  const serverMessage = error.response?.data?.message;
+  const isNoAccount = serverMessage === "no value present";
+
+  const message = isNoAccount
+    ? "No account found associated with this email address."
+    : (serverMessage || "Failed to process request. Please try again later.");
+
+  setStatus({
+    type: "error",
+    message: message
+  });
     } finally {
       setIsSubmitting(false);
     }
