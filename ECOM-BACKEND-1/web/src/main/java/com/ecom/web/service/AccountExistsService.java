@@ -35,7 +35,7 @@ public boolean accountExistsChecker(String email){
   //  requires reconfiguring for prod
 
   
-   String resetLink = "https://e3092478.ecomwebapp.pages.dev/newpassword?token=" + token;
+   String resetLink = "https://localhost:5173/newpassword?token=" + token;
        if(emailExists)  emailService.sendResetPasswordMail(email,resetLink);
      return emailExists;
 }
