@@ -32,7 +32,8 @@ public class LoginController {
         boolean isAuthenticated = service.checkCredentials(user); 
         
         if (isAuthenticated) {
-            return ResponseEntity.ok(Map.of("token", jwtUtil.generateToken(user.getEmail())));
+            String token = jwtUtil.generateToken(user.getEmail());
+            return ResponseEntity.ok(Map.of("token", token));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid email or password"));
         }
